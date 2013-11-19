@@ -5,7 +5,7 @@ ies and builds targets by executing commands. Its use of UNIX timestamps as a
 happens-before relation means that it can fail to build properly. This is espec-
 ially true during parallel builds. 
 
-Remodel, will also take a series of dependencies and targets, etc. (grammar 
+Remodel will also take a series of dependencies and targets, etc. (grammar 
 below), but unlike make, it will use MD5 hashes to detect new content and provide,
 together with the dependency chain, a happens-before relation (md5diff(oldA,newA)
 => everything that depends on A must be rebuilt). It executes all independent 
