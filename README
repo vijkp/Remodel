@@ -21,7 +21,8 @@ DEFAULT. Otherwise, the root is the argument to remodel, as in remodel foo.o.
     target ::= filename (',' filename)*
 
 
-Here's an example that builds the program baz from two source files, foo.cpp and bar.cpp. 
+Here's an example that builds the program baz from two source files, foo.cpp and
+bar.cpp. 
 
     DEFAULT <- baz
     baz <- foo.o, bar.o: "g++ foo.o bar.o -o baz"
