@@ -24,7 +24,6 @@ WHAT IS REMODEL?
       dependency ::= filename (',' filename)*
       target ::= filename (',' filename)*
 
-
   Here's an example that builds the program baz from two source files,
   foo.cpp and bar.cpp. 
 
