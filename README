@@ -1,4 +1,4 @@
-Remodel
+REMODEL
 =======
 Remodel is a replacement program for 'make'. 'make' takes a series of dependenc-
 ies and builds targets by executing commands. Its use of UNIX timestamps as a 
