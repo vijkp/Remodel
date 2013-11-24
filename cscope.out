@@ -1,0 +1,1745 @@
+cscope 15 $HOME/Dropbox/Desktop_mac/Fall-13_Courses/Systems-CS630/Projects/Remodel               0000007562
+	@Makefile
+
+2 
+	gCC
+ = 
+gcc
+
+
+3 
+CFLAGS
+ = -
+D
+ 
+DEBUG
+
+
+5 
+objs
+ = 
+obj
+/
+maš
+.
+o
+ obj/
+misc
+.Øobj/
+fže
+.o
+
+6 
+¤cs
+ = 
+maš
+.
+c
+ 
+misc
+.ømisc.
+h
+ 
+fže
+.h file.h
+
+8 
+»mod–
+: 
+CFLAGS
+ = -
+D
+ 
+DEBUG
+
+
+9 
+nd
+: 
+CFLAGS
+ = -
+D
+ 
+NON_DEBUG
+
+
+11 
+®l
+: 
+»mod–
+
+
+12 
+nd
+: 
+»mod–
+-nd
+
+13 
+»mod–
+: 
+$
+(
+objs
+)
+
+14 
+$
+(
+CC
+è-
+D
+ 
+DEBUG
+ $(
+objs
+è-
+o
+ 
+»mod–
+.
+Ãw
+
+
+15 
+mv
+ -
+f
+ 
+»mod–
+.
+Ãw
+„emodel
+
+17 #nÚ-
+debug
+ 
+bužd
+
+
+18 
+»mod–
+-
+nd
+: 
+$
+(
+objs
+)
+
+19 
+$
+(
+CFLAGS
+ = -
+D
+ 
+NON_DEBUG
+ )
+
+20 
+$
+(
+CC
+è$(
+objs
+è-
+o
+ 
+»mod–
+.
+Ãw
+
+
+21 
+mv
+ -
+f
+ 
+»mod–
+.
+Ãw
+„emodel
+
+23 
+þ—n
+:
+
+24 
+rm
+ -
+fv
+ 
+»mod–
+ *.
+o
+
+
+26 #Individu® 
+objeù
+ 
+fže
+ 
+ªd
+ 
+d•’d’c›s
+
+
+27 
+obj
+/
+maš
+.
+o
+: maš.
+c
+ 
+misc
+.
+h
+
+
+28 
+$
+(
+CC
+è-
+c
+ 
+maš
+.ø-
+o
+ 
+obj
+/main.o
+
+29 
+obj
+/
+misc
+.
+o
+: misc.
+c
+ misc.
+h
+
+
+30 
+$
+(
+CC
+è-
+c
+ 
+misc
+.ø-
+o
+ 
+obj
+/misc.o
+
+31 
+obj
+/
+fže
+.
+o
+: fže.
+c
+ 
+misc
+.
+h
+ file.h
+
+32 
+$
+(
+CC
+è-
+c
+ 
+fže
+.ø-
+o
+ 
+obj
+/file.o
+
+	@file.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡dlib.h
+>
+
+4 
+	~"fže.h
+"
+
+5 
+	~"misc.h
+"
+
+7 
+”rÜ_t
+ 
+	$fže_´oûss_»mod–fže
+() {
+
+8 
+FILE
+ *
+fh
+;
+
+9 
+”rÜ_t
+ 
+»t
+ = 0;
+
+11 ià((
+»t
+ = 
+	`fže_g‘_»mod–fže
+(
+fh
+)è!ð
+SUCCESS
+) {
+
+12 
+	`cÚ_log
+("Remodelfile‚ot found\n");
+
+13  
+»t
+;
+
+16 ià((
+»t
+ = 
+	`fže_»ad_»mod–fže
+(
+fh
+)è!ð
+SUCCESS
+) {
+
+17  
+»t
+;
+
+20  
+»t
+;
+
+21 
+	}
+}
+
+23 
+”rÜ_t
+ 
+	$fže_g‘_»mod–fže
+(
+FILE
+ *
+»mod–_fh
+) {
+
+24 
+”rÜ_t
+ 
+»t
+ = 
+RM_NOFILEENT
+;
+
+27 
+»mod–_fh
+ = 
+	`fÝ’
+("Remodelfile", "r");
+
+28 ià(
+»mod–_fh
+ !ð
+NULL
+) {
+
+29 
+	`cÚ_log
+("'Remodelfile' file found.\n");
+
+30 
+»t
+ = 
+SUCCESS
+;
+
+31 
+found
+;
+
+33 
+»mod–_fh
+ = 
+	`fÝ’
+("remodelfile", "r");
+
+34 ià(
+»mod–_fh
+ !ð
+NULL
+) {
+
+35 
+	`cÚ_log
+("'remodelfile' file found.\n");
+
+36 
+»t
+ = 
+SUCCESS
+;
+
+37 
+found
+;
+
+39  
+»t
+;
+
+40 
+found
+:
+
+41  
+»t
+;
+
+42 
+	}
+}
+
+45 
+”rÜ_t
+ 
+	$fže_»ad_»mod–fže
+(
+FILE
+ *
+fh
+) {
+
+46 *
+lše
+ = 
+NULL
+;
+
+47 
+fsize
+;
+
+48 
+size_t
+ 
+Ën
+=0;
+
+49 
+ssize_t
+ 
+»ad
+;
+
+50 
+”rÜ_t
+ 
+»t
+ = 0;
+
+52 (
+»ad
+ = 
+	`g‘lše
+(&
+lše
+, &
+Ën
+, 
+fh
+)) != -1) {
+
+53 
+	`cÚ_log
+("bufãr: %s", 
+lše
+);
+
+55 
+	`ä“
+(
+lše
+);
+
+56 
+	`fþo£
+(
+fh
+);
+
+57  
+»t
+;
+
+58 
+	}
+}
+
+	@file.h
+
+1 #iâdeà
+FILE_H
+
+
+2 
+	#FILE_H
+
+
+	)
+
+4 
+	~"misc.h
+"
+
+6 
+”rÜ_t
+ 
+fže_´oûss_»mod–fže
+();
+
+7 
+”rÜ_t
+ 
+fže_g‘_»mod–fže
+(
+FILE
+ *);
+
+8 
+”rÜ_t
+ 
+fže_»ad_»mod–fže
+(
+FILE
+ *
+fh
+);
+
+	@main.c
+
+2 
+	~<¡dio.h
+>
+
+3 
+	~<¡dlib.h
+>
+
+6 
+	~"misc.h
+"
+
+7 
+	~"fže.h
+"
+
+9 
+	$maš
+(
+¬gc
+, **
+¬gv
+) {
+
+10 
+”rÜ_t
+ 
+»suÉ
+;
+
+12 
+»suÉ
+ = 
+	`fže_´oûss_»mod–fže
+();
+
+13 ià(
+»suÉ
+ !ð
+SUCCESS
+) {
+
+14 
+	`cÚ_log
+("Process Remodelfile failed\n");
+
+15  
+»suÉ
+;
+
+18  
+SUCCESS
+;
+
+19 
+	}
+}
+
+	@misc.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡d¬g.h
+>
+
+3 
+	~<¡ršg.h
+>
+
+5 
+	$debug_log_
+(*
+fž’ame
+, 
+Ê
+, cÚ¡ *
+fÜm©
+, ...) {
+
+6 
+va_li¡
+ 
+¬g
+;
+
+7 
+»suÉ
+;
+
+8 
+fÜm©_Ãw
+[200];
+
+10 
+	`¥rštf
+(
+fÜm©_Ãw
+, "%s[%d]: %s", 
+fž’ame
+, 
+Ê
+, 
+fÜm©
+);
+
+11 
+fÜm©
+ = 
+fÜm©_Ãw
+;
+
+12 
+	`va_¡¬t
+(
+¬g
+, 
+fÜm©
+);
+
+13 
+»suÉ
+ = 
+	`v´štf
+(
+fÜm©
+, 
+¬g
+);
+
+14 
+	`va_’d
+(
+¬g
+);
+
+15  
+»suÉ
+;
+
+16 
+	}
+}
+
+18 
+	$cÚ_log
+(cÚ¡ *
+fÜm©
+, ...) {
+
+19 
+va_li¡
+ 
+¬g
+;
+
+20 
+»suÉ
+;
+
+21 
+fÜm©_Ãw
+[200];
+
+23 
+	`¥rštf
+(
+fÜm©_Ãw
+, "»mod–: %s", 
+fÜm©
+);
+
+24 
+fÜm©
+ = 
+fÜm©_Ãw
+;
+
+25 
+	`va_¡¬t
+(
+¬g
+, 
+fÜm©
+);
+
+26 
+»suÉ
+ = 
+	`v´štf
+(
+fÜm©
+, 
+¬g
+);
+
+27 
+	`va_’d
+(
+¬g
+);
+
+28  
+»suÉ
+;
+
+29 
+	}
+}
+
+	@misc.h
+
+1 #iâdeà
+MISC_H
+
+
+2 
+	#MISC_H
+
+
+	)
+
+4 
+	#TRUE
+ 1
+
+	)
+
+5 
+	#FALSE
+ 0
+
+	)
+
+8 
+	mSUCCESS
+,
+
+9 
+	mRM_NOFILEENT
+,
+
+10 
+	mRM_FAIL
+
+
+11 } 
+	t”rÜ_t
+;
+
+13 
+debug_log_
+(*
+fž’ame
+, 
+Ê
+, cÚ¡ *
+fÜm©
+, ...);
+
+14 
+cÚ_log
+(cÚ¡ * 
+fmt
+, ...);
+
+16 #ifdeà
+DEBUG
+
+
+17 
+	#debug_log
+(...è
+	`debug_log_
+(
+__FILE__
+, 
+__LINE__
+, 
+__VA_ARGS__
+)
+
+	)
+
+19 
+	#debug_log
+(...)
+
+	)
+
+	@tests/Makefile
+
+1 
+	g®l
+: 
+¢­
+
+
+3 
+¢­
+: 
+obj
+/
+maš
+.
+o
+ obj/
+driv”s
+.Øobj/
+fžesy¡em
+.Øobj/
+ÃtwÜk
+.Øobj/
+sched
+.o
+
+4 
+gcc
+ 
+obj
+/
+maš
+.
+o
+ obj/
+driv”s
+.Øobj/
+fžesy¡em
+.Øobj/
+ÃtwÜk
+.Øobj/
+sched
+.Ø-Ø
+¢­
+
+
+6 
+obj
+/
+maš
+.
+o
+: maš.
+c
+
+
+7 
+gcc
+ -
+c
+ 
+maš
+.ø-
+o
+ 
+obj
+/main.o
+
+9 
+obj
+/
+driv”s
+.
+o
+: driv”s.
+c
+
+
+10 
+gcc
+ -
+c
+ 
+driv”s
+.ø-
+o
+ 
+obj
+/drivers.o
+
+12 
+obj
+/
+fžesy¡em
+.
+o
+: fžesy¡em.
+c
+ 
+sched
+.
+h
+
+
+13 
+gcc
+ -
+c
+ 
+fžesy¡em
+.ø-
+o
+ 
+obj
+/filesystem.o
+
+15 
+obj
+/
+ÃtwÜk
+.
+o
+:‚‘wÜk.
+c
+ 
+sched
+.
+h
+
+
+16 
+gcc
+ -
+c
+ 
+ÃtwÜk
+.ø-
+o
+ 
+obj
+/network.o
+
+18 
+obj
+/
+sched
+.
+o
+: sched.
+c
+
+
+19 
+gcc
+ -
+c
+ 
+sched
+.ø-
+o
+ 
+obj
+/sched.o
+
+21 
+þ—n
+:
+
+22 
+rm
+ -
+rf
+ 
+obj
+
+
+	@tests/drivers.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡dlib.h
+>
+
+3 
+	~"driv”s.h
+"
+
+6 
+	$driv”s_š™
+() {
+
+7 
+a
+;
+
+8 
+b
+;
+
+9 
+c
+;
+
+10 
+c
+ = 
+a
++
+b
+;
+
+11 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+12 
+	}
+}
+
+14 
+	$driv”s_run
+() {
+
+15 
+h–lo
+ = 20;
+
+16 
+wÜld
+ = 10;
+
+17 
+h–lowÜld
+;
+
+18 
+h–lowÜld
+ = 
+h–lo
+ + 
+wÜld
+;
+
+19 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+20 
+	}
+}
+
+22 
+	$driv”s_upd©e
+() {
+
+23 
+i
+;
+
+24 
+j
+;
+
+25 
+i
+ = 20;
+
+26 
+j
+ = 30;
+
+27 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+28 
+	}
+}
+
+	@tests/drivers.h
+
+1 #iâdeà
+DRIVERS_H
+
+
+2 
+	#DRIVERS_H
+
+
+	)
+
+3 
+	~<¡dio.h
+>
+
+4 
+	~<¡dlib.h
+>
+
+6 
+driv”s_š™
+();
+
+7 
+driv”s_run
+();
+
+8 
+driv”s_upd©e
+();
+
+	@tests/filesystem.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡dlib.h
+>
+
+3 
+	~"fžesy¡em.h
+"
+
+4 
+	~"sched.h
+"
+
+6 
+	$fžesy¡em_š™
+() {
+
+7 
+	`sched_š™
+();
+
+8 
+a
+;
+
+9 
+b
+;
+
+10 
+c
+;
+
+11 
+c
+ = 
+a
++
+b
+;
+
+12 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+13 
+	}
+}
+
+15 
+	$fžesy¡em_run
+() {
+
+16 
+h–lo
+ = 20;
+
+17 
+wÜld
+ = 10;
+
+18 
+h–lowÜld
+;
+
+19 
+h–lowÜld
+ = 
+h–lo
+ + 
+wÜld
+;
+
+20 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+21 
+	}
+}
+
+23 
+	$fžesy¡em_upd©e
+() {
+
+24 
+	`sched_upd©e
+();
+
+25 
+i
+;
+
+26 
+j
+;
+
+27 
+i
+ = 20;
+
+28 
+j
+ = 30;
+
+29 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+30 
+	}
+}
+
+	@tests/filesystem.h
+
+1 #iâdeà
+FILESYSTEM_H
+
+
+2 
+	#FILESYSTEM_H
+
+
+	)
+
+4 
+	~<¡dio.h
+>
+
+5 
+	~<¡dlib.h
+>
+
+7 
+fžesy¡em_š™
+();
+
+8 
+fžesy¡em_run
+();
+
+9 
+fžesy¡em_upd©e
+();
+
+	@tests/main.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡dlib.h
+>
+
+3 
+	~"driv”s.h
+"
+
+4 
+	~"ÃtwÜk.h
+"
+
+5 
+	~"sched.h
+"
+
+6 
+	~"fžesy¡em.h
+"
+
+9 
+	$maš
+() {
+
+10 
+	`driv”s_š™
+();
+
+11 
+	`driv”s_upd©e
+();
+
+12 
+	`fžesy¡em_š™
+();
+
+13 
+	`fžesy¡em_upd©e
+();
+
+14 
+	`ÃtwÜk_š™
+();
+
+15 
+	`ÃtwÜk_upd©e
+();
+
+17 
+	}
+}
+
+	@tests/network.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡dlib.h
+>
+
+3 
+	~"ÃtwÜk.h
+"
+
+4 
+	~"sched.h
+"
+
+6 
+	$ÃtwÜk_š™
+() {
+
+7 
+	`sched_š™
+();
+
+8 
+a
+;
+
+9 
+b
+;
+
+10 
+c
+;
+
+11 
+c
+ = 
+a
++
+b
+;
+
+12 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+13 
+	}
+}
+
+15 
+	$ÃtwÜk_run
+() {
+
+16 
+h–lo
+ = 20;
+
+17 
+wÜld
+ = 10;
+
+18 
+h–lowÜld
+;
+
+19 
+h–lowÜld
+ = 
+h–lo
+ + 
+wÜld
+;
+
+20 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+21 
+	}
+}
+
+23 
+	$ÃtwÜk_upd©e
+() {
+
+24 
+	`sched_upd©e
+();
+
+25 
+i
+;
+
+26 
+j
+;
+
+27 
+i
+ = 20;
+
+28 
+j
+ = 30;
+
+29 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+30 
+	}
+}
+
+	@tests/network.h
+
+1 #iâdeà
+NETWORK_H
+
+
+2 
+	#NETWORK_H
+
+
+	)
+
+4 
+	~<¡dio.h
+>
+
+5 
+	~<¡dlib.h
+>
+
+6 
+ÃtwÜk_š™
+();
+
+7 
+ÃtwÜk_run
+();
+
+8 
+ÃtwÜk_upd©e
+();
+
+	@tests/sched.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡dlib.h
+>
+
+3 
+	~"sched.h
+"
+
+5 
+	$sched_š™
+() {
+
+6 
+a
+;
+
+7 
+b
+;
+
+8 
+c
+;
+
+9 
+c
+ = 
+a
++
+b
+;
+
+10 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+11 
+	}
+}
+
+13 
+	$sched_run
+() {
+
+14 
+h–lo
+ = 20;
+
+15 
+wÜld
+ = 10;
+
+16 
+h–lowÜld
+;
+
+17 
+h–lowÜld
+ = 
+h–lo
+ + 
+wÜld
+;
+
+18 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+19 
+	}
+}
+
+21 
+	$sched_upd©e
+() {
+
+22 
+i
+;
+
+23 
+j
+;
+
+24 
+i
+ = 20;
+
+25 
+j
+ = 30;
+
+26 
+	`´štf
+("% %d: %s()\n", 
+__FILE__
+, 
+__LINE__
+, 
+__FUNCTION__
+);
+
+27 
+	}
+}
+
+	@tests/sched.h
+
+1 #iâdeà
+SCHED_H
+
+
+2 
+	#SCHED_H
+
+
+	)
+
+3 
+	~<¡dio.h
+>
+
+4 
+	~<¡dlib.h
+>
+
+6 
+sched_š™
+();
+
+7 
+sched_run
+();
+
+8 
+sched_upd©e
+();
+
+	@
+1
+.
+0
+16
+202
+Makefile
+file.c
+file.h
+main.c
+misc.c
+misc.h
+tests/Makefile
+tests/drivers.c
+tests/drivers.h
+tests/filesystem.c
+tests/filesystem.h
+tests/main.c
+tests/network.c
+tests/network.h
+tests/sched.c
+tests/sched.h
