@@ -7,7 +7,7 @@ int debug_log_(char *filename, int ln, const char *format, ...) {
 	int result;
 	char format_new[200];
 	
-	sprintf(format_new, "%s[%d]: %s", filename, ln, format);
+	sprintf(format_new, "%s[%3d]: %s", filename, ln, format);
 	format = format_new;
 	va_start(arg, format);
 	result = vprintf(format, arg);

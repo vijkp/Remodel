@@ -18,5 +18,9 @@ int con_log(const char* fmt, ...);
 #else
 	#define debug_log(...)
 #endif /* DEBUG */
+
+#define FREE(x) { \
+		if (x != NULL) free(x);\
+	}
 #endif /* MISC_H */
 

@@ -1,4 +1,4 @@
-cscope 15 $HOME/Dropbox/Desktop_mac/Fall-13_Courses/Systems-CS630/Projects/Remodel               0000007562
+cscope 15 $HOME/Remodel               0000008439
 	@Makefile
 
 2 
@@ -18,14 +18,12 @@ DEBUG
 5 
 objs
  = 
-obj
-/
 maö
 .
 o
- obj/
+ 
 misc
-.ÿobj/
+.ÿ
 fûe
 .o
 
@@ -51,6 +49,10 @@ CFLAGS
 D
  
 DEBUG
+ -
+ggdb
+ -
+g3
 
 
 9 
@@ -61,6 +63,10 @@ CFLAGS
 D
  
 NON_DEBUG
+ -
+ggdb
+ -
+g3
 
 
 11 
@@ -87,11 +93,9 @@ objs
 $
 (
 CC
-Ë-
-D
- 
-DEBUG
- $(
+Ë$(
+CFLAGS
+Ë$(
 objs
 Ë-
 o
@@ -130,17 +134,9 @@ objs
 19 
 $
 (
-CFLAGS
- = -
-D
- 
-NON_DEBUG
- )
-
-20 
-$
-(
 CC
+Ë$(
+CFLAGS
 Ë$(
 objs
 Ë-
@@ -151,7 +147,7 @@ o
 √w
 
 
-21 
+20 
 mv
  -
 f
@@ -161,11 +157,11 @@ f
 √w
 Ñemodel
 
-23 
+22 
 ˛ón
 :
 
-24 
+23 
 rm
  -
 fv
@@ -175,7 +171,7 @@ fv
 o
 
 
-26 #IndividuÆ 
+25 #IndividuÆ 
 obje˘
  
 fûe
@@ -185,9 +181,7 @@ fûe
 dïídícõs
 
 
-27 
-obj
-/
+26 
 maö
 .
 o
@@ -199,23 +193,21 @@ misc
 h
 
 
-28 
+27 
 $
 (
 CC
+Ë$(
+CFLAGS
 Ë-
 c
  
 maö
 .¯-
 o
- 
-obj
-/main.o
+ main.o
 
-29 
-obj
-/
+28 
 misc
 .
 o
@@ -225,23 +217,21 @@ c
 h
 
 
-30 
+29 
 $
 (
 CC
+Ë$(
+CFLAGS
 Ë-
 c
  
 misc
 .¯-
 o
- 
-obj
-/misc.o
+ misc.o
 
-31 
-obj
-/
+30 
 fûe
 .
 o
@@ -253,19 +243,19 @@ misc
 h
  file.h
 
-32 
+31 
 $
 (
 CC
+Ë$(
+CFLAGS
 Ë-
 c
  
 fûe
 .¯-
 o
- 
-obj
-/file.o
+ file.o
 
 	@file.c
 
@@ -307,7 +297,7 @@ fh
 ªt
  = 
 	`fûe_gë_ªmodñfûe
-(
+(&
 fh
 )Ë!
 SUCCESS
@@ -325,7 +315,7 @@ SUCCESS
 ªt
  = 
 	`fûe_ªad_ªmodñfûe
-(
+(&
 fh
 )Ë!
 SUCCESS
@@ -349,7 +339,7 @@ SUCCESS
 	$fûe_gë_ªmodñfûe
 (
 FILE
- *
+ **
 ªmodñ_fh
 ) {
 
@@ -361,13 +351,13 @@ FILE
 RM_NOFILEENT
 ;
 
-27 
+27 *
 ªmodñ_fh
  = 
 	`f›í
 ("Remodelfile", "r");
 
-28 i‡(
+28 i‡(*
 ªmodñ_fh
  !
 NULL
@@ -387,13 +377,13 @@ SUCCESS
 found
 ;
 
-33 
+33 *
 ªmodñ_fh
  = 
 	`f›í
 ("remodelfile", "r");
 
-34 i‡(
+34 i‡(*
 ªmodñ_fh
  !
 NULL
@@ -429,45 +419,45 @@ found
 	}
 }
 
-45 
+44 
 îr‹_t
  
 	$fûe_ªad_ªmodñfûe
 (
 FILE
- *
+ **
 fh
 ) {
 
-46 *
+45 *
 löe
  = 
 NULL
 ;
 
-47 
+46 
 fsize
 ;
 
-48 
+47 
 size_t
  
 Àn
 =0;
 
-49 
+48 
 ssize_t
  
 ªad
 ;
 
-50 
+49 
 îr‹_t
  
 ªt
  = 0;
 
-52 (
+51 (
 ªad
  = 
 	`gëlöe
@@ -475,9 +465,15 @@ ssize_t
 löe
 , &
 Àn
-, 
+, *
 fh
 )) != -1) {
+
+52 
+	`fûe_∑r£_löe
+(
+löe
+);
 
 53 
 	`c⁄_log
@@ -491,17 +487,53 @@ löe
 löe
 );
 
-56 
-	`f˛o£
-(
-fh
-);
-
-57  
+56  
 ªt
 ;
 
-58 
+57 
+	}
+}
+
+59 
+	$fûe_∑r£_löe
+(*
+löe
+) {
+
+60 
+èrgë_«me_°rög
+[128];
+
+61 *
+dïídícy_°rög
+;
+
+62 *
+comm™d_°rög
+;
+
+63 
+size_t
+ 
+Àn
+;
+
+65 
+Àn
+ = 
+	`°æí
+(
+löe
+);
+
+66 
+	`debug_log
+("löêÀngth %d\n", 
+Àn
+);
+
+71 
 	}
 }
 
@@ -516,6 +548,10 @@ FILE_H
 
 
 	)
+
+3 
+	~"maödefs.h
+"
 
 4 
 	~"misc.h
@@ -533,7 +569,7 @@ fûe_¥o˚ss_ªmodñfûe
 fûe_gë_ªmodñfûe
 (
 FILE
- *);
+ **);
 
 8 
 îr‹_t
@@ -541,8 +577,12 @@ FILE
 fûe_ªad_ªmodñfûe
 (
 FILE
- *
-fh
+ **);
+
+9 
+fûe_¥o˚ss_löe
+(*
+löe
 );
 
 	@main.c
@@ -556,14 +596,18 @@ fh
 >
 
 6 
-	~"misc.h
+	~"maödefs.h
 "
 
 7 
+	~"misc.h
+"
+
+8 
 	~"fûe.h
 "
 
-9 
+10 
 	$maö
 (
 ¨gc
@@ -571,39 +615,173 @@ fh
 ¨gv
 ) {
 
-10 
+11 
 îr‹_t
  
 ªsu…
 ;
 
 12 
+èrgë_t
+ *
+hód
+;
+
+14 
 ªsu…
  = 
 	`fûe_¥o˚ss_ªmodñfûe
 ();
 
-13 i‡(
+15 i‡(
 ªsu…
  !
 SUCCESS
 ) {
 
-14 
+16 
 	`c⁄_log
 ("Process Remodelfile failed\n");
 
-15  
+17  
 ªsu…
 ;
 
-18  
+20  
 SUCCESS
 ;
 
-19 
+21 
 	}
 }
+
+	@maindefs.h
+
+1 #i‚de‡
+MAINDEFS_H
+
+
+2 
+	#MAINDEFS_H
+
+
+	)
+
+4 
+	~<°dlib.h
+>
+
+5 
+	~"ty≥.h
+"
+
+6 
+	~<°dio.h
+>
+
+8 
+	gdïídícy_t
+;
+
+9 
+	gèrgë_t
+;
+
+10 
+	g§c_fûe_t
+;
+
+13 
+	mDP_TARGET
+,
+
+14 
+	mDP_§c
+
+
+15 } 
+	tdp_ty≥_t
+;
+
+17 
+	s§c_fûe_
+ {
+
+18 
+	mfûï©h
+[256];
+
+19 
+	mmd5hash
+[32];
+
+20 
+boﬁ
+ 
+	mis_buût
+;
+
+21 
+§c_fûe_
+ *
+	m√xt
+;
+
+22 } 
+	t§c_fûe_t
+;
+
+24 
+	sdïídícy_
+ {
+
+25 
+dp_ty≥_t
+ 
+	mty≥
+;
+
+26 *
+	mdp
+;
+
+27 
+dïídícy_
+ *
+	m√xt
+;
+
+28 } 
+	tdïídícy_t
+;
+
+30 
+	sèrgë_
+ {
+
+31 
+	m«me
+[128];
+
+32 
+dïídícy_t
+ *
+	mdï_li°
+;
+
+33 *
+	mcomm™d
+;
+
+34 
+èrgë_
+ *
+	m√xt
+;
+
+35 } 
+	tèrgë_t
+;
 
 	@misc.c
 
@@ -1721,16 +1899,35 @@ sched_run
 sched_upd©e
 ();
 
+	@type.h
+
+1 #i‚de‡
+TYPE_H
+
+
+2 
+	#TYPE_H
+
+
+	)
+
+4 
+_Boﬁ
+ 
+	tboﬁ
+;
+
 	@
 1
 .
 0
-16
-202
+18
+220
 Makefile
 file.c
 file.h
 main.c
+maindefs.h
 misc.c
 misc.h
 tests/Makefile
@@ -1743,3 +1940,4 @@ tests/network.c
 tests/network.h
 tests/sched.c
 tests/sched.h
+type.h
