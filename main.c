@@ -36,6 +36,18 @@ int main(int argc, char **argv) {
 		return result;
 	}
 
+	/* 
+	 * Calculate reverse dependency for each source file. Eg.
+	 * srcfile.c -> <target1>, <target2>
+	 * srcfile.h -> <target1>, <target3>
+	 */
+	
+	/* Calculate MD5s of all the source files. Can be done in parallel? */
+
+	/* Mark all the targets that need build */
+
+	/* Build all the targets. Can be done in parallel? */
+
 	/* print target list */
 	target_t        *temp = target_head->next;
 	dependency_t *dp_temp = NULL;
