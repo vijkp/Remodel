@@ -3,15 +3,19 @@
 
 #define TRUE    1
 #define FALSE   0
+#define true    TRUE
+#define false   FALSE
 
 typedef enum {
 	SUCCESS,		/* Success */
 	RM_NOFILEENT,   /* File not found */
-	RM_FAIL			/* Fail*/
+	RM_FAIL,		/* Fail*/
+	RM_PARSE_FAIL   /* Parsing Failed */
 } error_t;
 
 int debug_log_(char *filename, int ln, const char *format, ...);
 int con_log(const char* fmt, ...);
+void print_usage();
 
 #ifdef DEBUG
 	#define debug_log(...) debug_log_(__FILE__, __LINE__, __VA_ARGS__)

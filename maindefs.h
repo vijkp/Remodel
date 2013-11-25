@@ -2,36 +2,50 @@
 #define MAINDEFS_H
 
 #include <stdlib.h>
-#include "type.h"
 #include <stdio.h>
 
-struct dependency_t;
-struct target_t;
-struct src_file_t;
+#include "misc.h"
+#include "type.h"
+
+struct dependency_;
+struct target_;
+struct srcfile_;
+
+#define MAX_FILENAME 256
+#define MD5_HASHSIZE 32
 
 typedef enum {
+	DP_UNKNOWN,     /* Default value. If unknown, figure out */
 	DP_TARGET,		/* Dependency is a target */
-	DP_src			/* Dependency is a src file */
+	DP_SRC,			/* Dependency is a src file */
+	DP_HEADER		/* Header file */
 } dp_type_t; 
 
-typedef struct src_file_ { 
-	char filepath[256];			/* Holds file path to a source file */
-	char md5hash[32];			/* md5 hash string 128 bits */
-	bool is_built;				/* flag to indicate if this file needs to be built */
-	struct src_file_ *next;	/* pointer to next file_struct_ for link lists */
-} src_file_t;
+typedef struct srcfile_ { 
+	char name[MAX_FILENAME];	/* Holds file path to a source file */
+	char md5hash[MD5_HASHSIZE];	/* md5 hash string 128 bits */
+	bool is_md5_present;				/* md5 hash calculation needed */
+	bool need_md5_calc;			/* md5 calc needed or not */	
+	struct srcfile_ *next;	    /* pointer to next file_struct_ */
+		                        /* for link lists */
+} srcfile_t;
 
 typedef struct dependency_ {
-	dp_type_t	type;
-	void		*dp;
+	char	  name[MAX_FILENAME];
+	void	  *pointer;
+	dp_type_t type;
 	struct dependency_ *next;
 } dependency_t;
 
 typedef struct target_ {
-	char name[128];
-	struct dependency_t *dep_list;
-	char *command;
-	struct target_ *next;
+	char   name[MAX_FILENAME];
+	char   *command;
+	struct dependency_  *dp_head;
+	struct target_      *next;
 } target_t;
 
+target_t     *new_target_node();
+dependency_t *new_dp_node();
+srcfile_t    *new_src_node();
+dp_type_t	 check_dp_type(char *name); 
 #endif /* MAINDEFS_H */
