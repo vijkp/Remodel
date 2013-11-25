@@ -43,8 +43,9 @@ int main(int argc, char **argv) {
 		con_log("target: %-18s command: %s\n", temp->name,
 				temp->command);
 		dp_temp = temp->dp_head;
+		con_log("\tdependencies:\n");
 		while(dp_temp != NULL) {
-			con_log("   dependency: %s\n", dp_temp->name);
+			con_log("\t\t%s\n", dp_temp->name);
 			dp_temp = dp_temp->next;
 		}
 		temp = temp->next;
@@ -52,8 +53,9 @@ int main(int argc, char **argv) {
 
 	/* print src file list */
 	srcfile_t *temp2 = srcfile_head->next;
+	con_log("List of source files:\n");
 	while (temp2 != NULL) {
-		con_log("source file: %-18s md5: %s\n", temp2->name,
+		con_log("\tfile: %-18s md5: %s\n", temp2->name,
 				temp2->md5hash);
 		temp2 = temp2->next;
 	}
