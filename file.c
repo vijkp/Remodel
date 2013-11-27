@@ -201,7 +201,7 @@ error_t file_parse_line(char *line) {
 				strcpy(src_node->name, dp_name);
 				src_node->next = srcfile_head->next;
 				srcfile_head->next = src_node;
-				debug_log("Adding src file %s to src list\n", src_node->name);
+				debug_log("adding src file %s to src list\n", src_node->name);
 			}
 			dp_node->type = dp_type;
 			strcpy(dp_node->name, dp_name);
@@ -210,7 +210,6 @@ error_t file_parse_line(char *line) {
 			if (node->dp_head == NULL) {
 				dp_node->next = NULL;
 				node->dp_head = dp_node;
-				debug_log("xxx\n");
 			} else {
 				dp_node->next = node->dp_head;
 				node->dp_head = dp_node;

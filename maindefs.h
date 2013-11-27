@@ -23,7 +23,7 @@ typedef enum {
 
 typedef struct srcfile_ { 
 	char name[MAX_FILENAME];	/* Holds file path to a source file */
-	char md5hash[MD5_HASHSIZE];	/* md5 hash string 128 bits */
+	char md5hash[2*MD5_HASHSIZE+1];	/* md5 hash string 128 bits */
 	bool is_md5_present;				/* md5 hash calculation needed */
 	bool need_md5_calc;			/* md5 calc needed or not */	
 	struct srcfile_ *next;	    /* pointer to next file_struct_ */

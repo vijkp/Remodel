@@ -7,6 +7,7 @@
 #include "maindefs.h"
 #include "misc.h"
 #include "file.h"
+#include "md5hash.h"
 
 /* Globals */
 target_t  *target_head;
@@ -33,7 +34,7 @@ int main(int argc, char **argv) {
 	srcfile_head = new_src_node();
 	result = file_process_remodelfile();
 	if (result != SUCCESS) {
-		return result;
+		goto end;
 	}
 
 	/* 
@@ -43,6 +44,12 @@ int main(int argc, char **argv) {
 	 */
 	
 	/* Calculate MD5s of all the source files. Can be done in parallel? */
+	result = md5_calculate_for_sources();
+	if (result != SUCCESS) {
+		goto end;
+	}
+
+	/* Write all source files' md5 hashes to a tmp file */
 
 	/* Mark all the targets that need build */
 
