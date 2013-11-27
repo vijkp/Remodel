@@ -26,6 +26,8 @@ error_t md5_calculate_for_sources() {
 		fd = fopen(node->name, "rb");
 		if (fd == NULL) {
 			con_log("warning: failed to open '%s'\n", node->name);
+			node = node->next;
+			continue;
 		}
 		
 		fseek(fd, 0, SEEK_END);
