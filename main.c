@@ -34,7 +34,14 @@ int main(int argc, char **argv) {
 	srcfile_head = new_src_node();
 	result = file_process_remodelfile();
 	if (result != SUCCESS) {
-		goto end;
+			goto end;
+	}
+
+	/* Check if the given target is available in the file */
+	result = file_check_given_target(target_name);
+	if (result != SUCCESS) {
+	con_log("error: nothing to build for the target '%s'\n", target_name);  
+	goto end;
 	}
 
 	/* 

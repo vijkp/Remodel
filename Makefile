@@ -9,7 +9,7 @@ remodel: CFLAGS = -D DEBUG -ggdb -g3
 nd: CFLAGS = -D NON_DEBUG -ggdb -g3
 d: CFLAGS = -D DEBUG -ggdb -g3
 
-all: nd
+all: d
 d: remodel
 nd: remodel-nd
 remodel: $(objs)

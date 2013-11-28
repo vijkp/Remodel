@@ -1,5 +1,5 @@
 #!/bin/sh
 
 cd ./tests/
-../remodel
+../remodel $1
 cd ../

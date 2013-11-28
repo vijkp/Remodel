@@ -21,8 +21,8 @@ error_t file_process_remodelfile() {
 		con_log("error: 'remodelfile' read failed\n");
 		goto end;
 	}
-end:
 	fclose(fh);
+end:
 	return ret;
 }
 
@@ -231,5 +231,23 @@ error:
 	FREE(command_string);
 end:	
 	FREE(dp_string);
+	return ret;
+}
+
+error_t file_check_given_target(char *target) {
+	error_t  ret = RM_FAIL;
+	target_t *node;
+	bool     target_found = false;
+
+	node = target_head->next;
+	while (node != NULL) {
+		if (strcmp(node->name, target) == 0) {
+			target_found = true;
+			ret = SUCCESS;
+			goto end;
+		}
+		node = node->next;
+	}
+end:
 	return ret;
 }
