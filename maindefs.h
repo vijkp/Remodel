@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 
 #include "misc.h"
 #include "type.h"
@@ -13,6 +14,10 @@ struct srcfile_;
 
 #define MAX_FILENAME 256
 #define MD5_HASHSIZE 32
+#define RM_APP_DIR	 ".remodel"
+#define RM_MD5HASHES ".remodel/md5hashes"
+#define RM_MD5HASHES_BKP    ".remodel/md5hashes.bkp"
+
 
 typedef enum {
 	DP_UNKNOWN,     /* Default value. If unknown, figure out */

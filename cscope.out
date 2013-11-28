@@ -1,4 +1,4 @@
-cscope 15 $HOME/Remodel               0000017857
+cscope 15 $HOME/Remodel               0000019287
 	@Makefile
 
 2 
@@ -94,7 +94,7 @@ g3
 12 
 Æl
 : 
-nd
+d
 
 
 13 
@@ -434,14 +434,14 @@ SUCCESS
 ;
 
 24 
-íd
-:
-
-25 
 	`f˛o£
 (
 fh
 );
+
+25 
+íd
+:
 
 26  
 ªt
@@ -1415,7 +1415,83 @@ dp_°rög
 èrgë
 ) {
 
+238 
+îr‹_t
+ 
+ªt
+ = 
+RM_FAIL
+;
+
 239 
+èrgë_t
+ *
+node
+;
+
+240 
+boﬁ
+ 
+èrgë_found
+ = 
+Ál£
+;
+
+242 
+node
+ = 
+èrgë_hód
+->
+√xt
+;
+
+243 
+node
+ !
+NULL
+) {
+
+244 i‡(
+	`°rcmp
+(
+node
+->
+«me
+, 
+èrgë
+) == 0) {
+
+245 
+èrgë_found
+ = 
+åue
+;
+
+246 
+ªt
+ = 
+SUCCESS
+;
+
+247 
+íd
+;
+
+249 
+node
+ =Çode->
+√xt
+;
+
+251 
+íd
+:
+
+252  
+ªt
+;
+
+253 
 	}
 }
 
@@ -1478,10 +1554,10 @@ löe
 11 
 îr‹_t
  
-	$fûe_check_giví_èrgë
+fûe_check_giví_èrgë
 (*
 èrgë
-) {
+);
 
 	@main.c
 
@@ -1615,25 +1691,59 @@ SUCCESS
 ªsu…
  = 
 	`fûe_check_giví_èrgë
-();
+(
+èrgë_«me
+);
 
-50 
-ªsu…
- = 
-	`md5_ˇlcuœã_f‹_sour˚s
-();
-
-51 i‡(
+42 i‡(
 ªsu…
  !
 SUCCESS
 ) {
 
-52 
+43 
+	`c⁄_log
+("îr‹:ÇŸhögÅÿbuûd f‹Åhêèrgë '%s'\n", 
+èrgë_«me
+);
+
+44 
 íd
 ;
 
-62 
+54 
+ªsu…
+ = 
+	`md5_ˇlcuœã_f‹_sour˚s
+();
+
+55 i‡(
+ªsu…
+ !
+SUCCESS
+) {
+
+56 
+íd
+;
+
+60 
+ªsu…
+ = 
+	`md5_ßve_md5_hashes
+();
+
+61 i‡(
+ªsu…
+ !
+SUCCESS
+) {
+
+62 
+íd
+;
+
+72 
 èrgë_t
  *
 ãmp
@@ -1643,7 +1753,7 @@ SUCCESS
 √xt
 ;
 
-63 
+73 
 dïídícy_t
  *
 dp_ãmp
@@ -1651,13 +1761,13 @@ dp_ãmp
 NULL
 ;
 
-64 
+74 
 ãmp
  !
 NULL
 ) {
 
-65 
+75 
 	`c⁄_log
 ("èrgë: %-18†comm™d: %s\n", 
 ãmp
@@ -1665,13 +1775,13 @@ NULL
 «me
 ,
 
-66 
+76 
 ãmp
 ->
 comm™d
 );
 
-67 
+77 
 dp_ãmp
  = 
 ãmp
@@ -1679,17 +1789,17 @@ dp_ãmp
 dp_hód
 ;
 
-68 
+78 
 	`c⁄_log
 ("\tdependencies:\n");
 
-69 
+79 
 dp_ãmp
  !
 NULL
 ) {
 
-70 
+80 
 	`c⁄_log
 ("\t\t%s\n", 
 dp_ãmp
@@ -1697,19 +1807,19 @@ dp_ãmp
 «me
 );
 
-71 
+81 
 dp_ãmp
  = dp_ãmp->
 √xt
 ;
 
-73 
+83 
 ãmp
  =Åemp->
 √xt
 ;
 
-77 
+87 
 §cfûe_t
  *
 ãmp2
@@ -1719,17 +1829,17 @@ dp_ãmp
 √xt
 ;
 
-78 
+88 
 	`c⁄_log
 ("List of source files:\n");
 
-79 
+89 
 ãmp2
  !
 NULL
 ) {
 
-80 
+90 
 	`c⁄_log
 ("\tfûe: %-18†md5: %s\n", 
 ãmp2
@@ -1737,27 +1847,27 @@ NULL
 «me
 ,
 
-81 
+91 
 ãmp2
 ->
 md5hash
 );
 
-82 
+92 
 ãmp2
  =Åemp2->
 √xt
 ;
 
-85 
+95 
 íd
 :
 
-87  
+97  
 SUCCESS
 ;
 
-88 
+98 
 	}
 }
 
@@ -2101,175 +2211,191 @@ MAINDEFS_H
 	~<°dio.h
 >
 
-7 
+6 
+	~<î∫o.h
+>
+
+8 
 	~"misc.h
 "
 
-8 
+9 
 	~"ty≥.h
 "
 
-10 
+11 
 	gdïídícy_
 ;
 
-11 
+12 
 	gèrgë_
 ;
 
-12 
+13 
 	g§cfûe_
 ;
 
-14 
+15 
 	#MAX_FILENAME
  256
 
 	)
 
-15 
+16 
 	#MD5_HASHSIZE
  32
 
 	)
 
-18 
+17 
+	#RM_APP_DIR
+ ".ªmodñ"
+
+	)
+
+18 
+	#RM_MD5HASHES
+ ".ªmodñ/md5hashes"
+
+	)
+
+21 
 	mDP_UNKNOWN
 ,
 
-19 
+22 
 	mDP_TARGET
 ,
 
-20 
+23 
 	mDP_SRC
 ,
 
-21 
+24 
 	mDP_HEADER
 
 
-22 } 
+25 } 
 	tdp_ty≥_t
 ;
 
-24 
+27 
 	s§cfûe_
  {
 
-25 
+28 
 	m«me
 [
 MAX_FILENAME
 ];
 
-26 
+29 
 	mmd5hash
 [2*
 MD5_HASHSIZE
 +1];
 
-27 
+30 
 boﬁ
  
 	mis_md5_¥e£¡
 ;
 
-28 
+31 
 boﬁ
  
 	m√ed_md5_ˇlc
 ;
 
-29 
+32 
 §cfûe_
  *
 	m√xt
 ;
 
-31 } 
+34 } 
 	t§cfûe_t
 ;
 
-33 
+36 
 	sdïídícy_
  {
 
-34 
+37 
 	m«me
 [
 MAX_FILENAME
 ];
 
-35 *
+38 *
 	mpoöãr
 ;
 
-36 
+39 
 dp_ty≥_t
  
 	mty≥
 ;
 
-37 
+40 
 dïídícy_
  *
 	m√xt
 ;
 
-38 } 
+41 } 
 	tdïídícy_t
 ;
 
-40 
+43 
 	sèrgë_
  {
 
-41 
+44 
 	m«me
 [
 MAX_FILENAME
 ];
 
-42 *
+45 *
 	mcomm™d
 ;
 
-43 
+46 
 dïídícy_
  *
 	mdp_hód
 ;
 
-44 
+47 
 èrgë_
  *
 	m√xt
 ;
 
-45 } 
+48 } 
 	tèrgë_t
 ;
 
-47 
+50 
 èrgë_t
  *
 √w_èrgë_node
 ();
 
-48 
+51 
 dïídícy_t
  *
 √w_dp_node
 ();
 
-49 
+52 
 §cfûe_t
  *
 √w_§c_node
 ();
 
-50 
+53 
 dp_ty≥_t
  
 check_dp_ty≥
@@ -2307,59 +2433,63 @@ check_dp_ty≥
 	~<›ís¶/md5.h
 >
 
-12 
+13 
+	~<sys/°©.h
+>
+
+16 
 §cfûe_t
  *
 §cfûe_hód
 ;
 
-14 
+18 
 îr‹_t
  
 	$md5_ˇlcuœã_f‹_sour˚s
 () {
 
-15 
+19 
 îr‹_t
  
 ªt
  = 
-SUCCESS
+RM_SUCCESS
 ;
 
-16 
+20 
 §cfûe_t
  *
 node
 ;
 
-17 
+21 
 FILE
  *
 fd
 ;
 
-18 *
+22 *
 fbuf„r
 ;
 
-19 
+23 
 md5hash
 [
 MD5_DIGEST_LENGTH
 ];
 
-20 
+24 
 fsize
 ;
 
-21 
+25 
 md5°rög
 [2*
 MD5_DIGEST_LENGTH
 +1];
 
-24 
+28 
 node
  = 
 §cfûe_hód
@@ -2367,13 +2497,13 @@ node
 √xt
 ;
 
-25 
+29 
 node
  !
 NULL
 ) {
 
-26 
+30 
 fd
  = 
 	`f›í
@@ -2383,13 +2513,13 @@ node
 «me
 , "rb");
 
-27 i‡(
+31 i‡(
 fd
  =
 NULL
 ) {
 
-28 
+32 
 	`c⁄_log
 ("w¨nög: faûedÅÿ›í '%s'\n", 
 node
@@ -2397,7 +2527,13 @@ node
 «me
 );
 
-31 
+33 
+node
+ =Çode->
+√xt
+;
+
+37 
 	`f£ek
 (
 fd
@@ -2405,7 +2541,7 @@ fd
 SEEK_END
 );
 
-32 
+38 
 fsize
  = 
 	`·ñl
@@ -2413,13 +2549,13 @@ fsize
 fd
 );
 
-33 
+39 
 	`ªwöd
 (
 fd
 );
 
-34 
+40 
 fbuf„r
  = (*)
 	`mÆloc
@@ -2427,7 +2563,7 @@ fbuf„r
 fsize
  +
 
-36 
+42 
 	`‰ód
 (
 fbuf„r
@@ -2437,7 +2573,7 @@ fsize
 fd
 );
 
-39 
+45 
 	`MD5
 (
 fbuf„r
@@ -2447,7 +2583,7 @@ fsize
 md5hash
 );
 
-40 
+46 
 	`md5_to_°rög
 (
 md5hash
@@ -2455,7 +2591,7 @@ md5hash
 md5°rög
 );
 
-41 
+47 
 	`°r˝y
 (
 node
@@ -2465,11 +2601,11 @@ md5hash
 md5°rög
 );
 
-42 
+48 
 	`debug_log
 ("calculating md5 for %s size: %ld bytes md5: %s\n",
 
-43 
+49 
 node
 ->
 «me
@@ -2479,37 +2615,163 @@ fsize
 md5°rög
 );
 
-44 
+50 
 	`f˛o£
 (
 fd
 );
 
-45 
+51 
 	`FREE
 (
 fbuf„r
 );
 
-46 
+52 
 node
  =Çode->
 √xt
 ;
 
-48 
+54 
 íd
 :
 
-49  
+55  
 ªt
 ;
 
-50 
+56 
 	}
 }
 
-52 
+58 
+îr‹_t
+ 
+	$md5_ßve_md5_hashes
+() {
+
+59 
+îr‹_t
+ 
+ªt
+ = 
+RM_SUCCESS
+;
+
+60 
+mkdú_ªt
+;
+
+61 
+FILE
+ *
+fh
+;
+
+64 
+	`c⁄_log
+("asd‡%x\n", 
+S_IRUSR
+ | 
+S_IWUSR
+);
+
+65 
+	`c⁄_log
+("asd‡%x\n", 
+S_IRWXU
+);
+
+67 
+mkdú_ªt
+ = 
+	`mkdú
+(
+RM_APP_DIR
+, 
+S_IRWXU
+ | 
+S_IRWXG
+ | 
+S_IRWXO
+);
+
+69 i‡(
+mkdú_ªt
+ == -1) {
+
+70 i‡(
+î∫o
+ =
+EEXIST
+) {
+
+71 
+	`debug_log
+("directory .remodelálreadyÉxists\n");
+
+72 } i‡(
+î∫o
+ =
+ENOSPC
+) {
+
+73 
+	`c⁄_log
+("error: directory creation failed. NoÉnough memory.\n");
+
+74 
+ªt
+ = 
+RM_FAIL
+;
+
+75 
+íd
+;
+
+78 
+	`debug_log
+("directory .remodel created.\n");
+
+81 
+fh
+ = 
+	`f›í
+(
+RM_MD5HASHES
+, "rw");
+
+83 i‡(
+fh
+ =
+NULL
+) {
+
+84 
+	`c⁄_log
+("error: file doesn'tÉxist\n");
+
+90 
+íd
+:
+
+91 
+	`f˛o£
+(
+fh
+);
+
+92  
+ªt
+;
+
+93 
+	}
+}
+
+95 
 	$md5_to_°rög
 (*
 md
@@ -2517,21 +2779,21 @@ md
 ªsu…
 ) {
 
-53 
+96 
 i
 ;
 
-54 
+97 
 tmp
 [2];
 
-55 
+98 
 i
 =0; i < 
 MD5_DIGEST_LENGTH
 ; i++) {
 
-56 
+99 
 	`•rötf
 (
 tmp
@@ -2541,7 +2803,7 @@ md
 i
 ]);
 
-57 
+100 
 ªsu…
 [2*
 i
@@ -2549,7 +2811,7 @@ i
 tmp
 [0];
 
-58 
+101 
 ªsu…
 [2*
 i
@@ -2557,11 +2819,11 @@ i
 tmp
 [1];
 
-60 
+103 
 ªsu…
 [32] = '\0';
 
-61 
+104 
 	}
 }
 
@@ -2806,26 +3068,36 @@ FALSE
 	)
 
 10 
-	mSUCCESS
-,
+	mRM_ERROR
+ = -1,
 
 11 
-	mRM_NOFILEENT
+	mRM_SUCCESS
 ,
 
 12 
-	mRM_FAIL
+	mRM_NOFILEENT
 ,
 
 13 
+	mRM_FAIL
+,
+
+14 
 	mRM_PARSE_FAIL
+,
+
+16 
+	mSUCCESS
+ = 
+RM_SUCCESS
 
 
-14 } 
+17 } 
 	tîr‹_t
 ;
 
-16 
+19 
 debug_log_
 (*
 fûíame
@@ -2835,21 +3107,21 @@ fûíame
 f‹m©
 , ...);
 
-17 
+20 
 c⁄_log
 (c⁄° * 
 fmt
 , ...);
 
-18 
+21 
 ¥öt_ußge
 ();
 
-20 #ifde‡
+23 #ifde‡
 DEBUG
 
 
-21 
+24 
 	#debug_log
 (...Ë
 	`debug_log_
@@ -2863,19 +3135,19 @@ __VA_ARGS__
 
 	)
 
-23 
+26 
 	#debug_log
 (...)
 
 	)
 
-26 
+29 
 	#FREE
 (
 x
 ) { \
 
-27 i‡(
+30 i‡(
 x
  !
 NULL
@@ -2883,7 +3155,7 @@ NULL
 	`‰ì
 (x);\
 
-28 }
+31 }
 
 	)
 

@@ -9,10 +9,14 @@
 /* for md5 calculations */
 #include <openssl/md5.h>
 
+/* for saving hashes into a file */
+#include <sys/stat.h>
+
+
 extern srcfile_t *srcfile_head;
 
 error_t md5_calculate_for_sources() {
-	error_t ret = SUCCESS;
+	error_t ret = RM_SUCCESS;
 	srcfile_t *node;
 	FILE *fd;
 	unsigned char *fbuffer;
@@ -48,6 +52,51 @@ error_t md5_calculate_for_sources() {
 		node = node->next;
 	}
 end:
+	return ret;
+}
+
+error_t md5_save_md5_hashes() {
+	error_t   ret = RM_SUCCESS;
+	int       mkdir_ret, ret_val;
+	FILE      *fh;
+	srcfile_t *srcfile_node;
+
+	/* Create .remodel folder */
+	mkdir_ret = mkdir(RM_APP_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+	if (mkdir_ret == -1) {
+		if (errno == EEXIST) {
+			debug_log("directory .remodel already exists\n");
+		} else if (errno == ENOSPC) {
+			con_log("error: directory creation failed. No enough memory.\n");
+			ret = RM_FAIL;
+			goto end;
+		}
+	} else {
+		debug_log("directory .remodel created.\n");
+	}
+
+	fh = fopen(RM_MD5HASHES_BKP, "ab+");
+	if (fh == NULL) {
+		con_log("error: file doesn't exist\n");
+		goto end;
+	}
+
+	/* write all md5 hashes of each source file */
+	srcfile_node = srcfile_head->next;
+	while (srcfile_node != NULL) {
+		debug_log("saving %s file hash to a file.\n", srcfile_node->name);
+		fprintf(fh, "%s %s\n", srcfile_node->name, srcfile_node->md5hash);
+		srcfile_node = srcfile_node->next;
+	}
+
+	ret_val = rename(RM_MD5HASHES_BKP, RM_MD5HASHES);
+	if (ret_val == -1) {
+		con_log("error: saving md5 hashes failed.\n");
+		goto end;
+	}
+
+end:
+	if (fh != NULL) fclose(fh);
 	return ret;
 }
 

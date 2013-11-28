@@ -56,6 +56,12 @@ int main(int argc, char **argv) {
 		goto end;
 	}
 
+	/* Save <sourcefile> <md5> in a temp file in .remodel/ folder */
+	result = md5_save_md5_hashes();
+	if (result != SUCCESS) {
+		goto end;
+	}
+
 	/* Write all source files' md5 hashes to a tmp file */
 
 	/* Mark all the targets that need build */
