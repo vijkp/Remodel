@@ -93,7 +93,8 @@ int main(int argc, char **argv) {
 	}
 
 end:
-	//free_head_target();
+	free_target_head();
+	free_srcfile_head();
 	return SUCCESS;
 }
 
