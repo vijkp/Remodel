@@ -265,3 +265,11 @@ error_t file_update_src_md5info(char *src_name, char *md5hash) {
 end:
 	return ret;
 }
+
+error_t file_mark_all_targets() {
+	error_t ret = RM_SUCCESS;
+
+	debug_log("XXX: fix this\n");
+end:
+	return ret;
+}

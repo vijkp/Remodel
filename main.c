@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 	}
 
 	/* 
-	 * Calculate reverse dependency for each source file. Eg.
+	 * XXX Calculate reverse dependency for each source file. Eg.
 	 * srcfile.c -> <target1>, <target2>
 	 * srcfile.h -> <target1>, <target3>
 	 */
@@ -57,10 +57,7 @@ int main(int argc, char **argv) {
 		goto end;
 	}
 
-	/* 
-	 * Compare and load, if found, sourcefile md5 info to 
-	 * srcfile_head list 
-	 */
+	/* Compare and load, sourcefile md5 info into srcfile_t nodes*/
 	result = md5_load_from_file();
 	if (result != SUCCESS) {
 		goto end;
@@ -72,39 +69,23 @@ int main(int argc, char **argv) {
 		goto end;
 	}
 
-	/* Write all source files' md5 hashes to a tmp file */
-
 	/* Mark all the targets that need build */
-
-	/* Build all the targets. Can be done in parallel? */
-
-	/* print target list */
-	target_t        *temp = target_head->next;
-	dependency_t *dp_temp = NULL;
-	while (temp != NULL) {
-		debug_log("target: %-18s command: %s\n", temp->name,
-				temp->command);
-		dp_temp = temp->dp_head;
-		debug_log("\tdependencies:\n");
-		while(dp_temp != NULL) {
-			debug_log("\t\t%s\n", dp_temp->name);
-			dp_temp = dp_temp->next;
-		}
-		temp = temp->next;
+	result = file_mark_all_targets();
+	if (result != SUCCESS) {
+		goto end;
 	}
 
-	/* print src file list */
-	srcfile_t *temp2 = srcfile_head->next;
-	debug_log("List of source files:\n");
-	while (temp2 != NULL) {
-		debug_log("\tfile: %-18s md5: %s\n", temp2->name,
-				temp2->md5hash);
-		temp2 = temp2->next;
-	}
+
+	/* XXX Build all the targets. Can be done in parallel? */
+	
+
+	/* XXX remove print functions later */
+	print_srcfile_list();
+	print_target_list();
 
 end:
-//	free_target_head();
-//	free_srcfile_head();
+//XXX	free_target_head();
+//XXX	free_srcfile_head();
 	return SUCCESS;
 }
 

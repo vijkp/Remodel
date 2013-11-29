@@ -6,7 +6,6 @@
 #include <errno.h>
 
 #include "misc.h"
-#include "type.h"
 
 struct dependency_;
 struct target_;
@@ -18,6 +17,7 @@ struct srcfile_;
 #define RM_MD5HASH_FILE ".remodel/md5hashes"
 #define RM_MD5HASH_BKPFILE    ".remodel/md5hashes.bkp"
 
+typedef _Bool bool;
 
 typedef enum {
 	DP_UNKNOWN,     /* Default value. If unknown, figure out */
@@ -48,6 +48,10 @@ typedef struct target_ {
 	struct dependency_  *dp_head;
 	struct target_      *next;
 } target_t;
+
+/* External variables */
+extern target_t	 *target_head;
+extern srcfile_t *srcfile_head;
 
 target_t     *new_target_node();
 dependency_t *new_dp_node();

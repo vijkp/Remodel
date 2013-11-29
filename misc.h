@@ -1,10 +1,13 @@
 #ifndef MISC_H
 #define MISC_H
 
+#include "maindefs.h"
+
 #define TRUE    1
 #define FALSE   0
 #define true    TRUE
 #define false   FALSE
+
 
 typedef enum {
 	RM_ERROR = -1,
