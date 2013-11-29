@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 	target_head  = new_target_node();
 	srcfile_head = new_src_node();
 	remodel_head = new_remodel_node();
-	if (target_head && srcfile_head && remodel_head) {
+	if (!(target_head && srcfile_head && remodel_head)) {
 		goto end; /* error: system out of memory */
 	}
 
@@ -103,7 +103,6 @@ int main(int argc, char **argv) {
 
 	/* XXX Build all the targets. Can be done in parallel? */
 		
-	sleep(5);
 
 	/* XXX remove print functions later */
 	print_srcfile_list();

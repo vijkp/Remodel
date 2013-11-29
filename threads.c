@@ -36,8 +36,8 @@ error_t remodel_thread(void *data) {
 
 	while(1) {
 		if (i == tdata->tid) pthread_exit(0);
-		sleep(1);
-		LOG("thread tid:%d polling after 3000ms.\n", tdata->tid);
+		usleep(500000);
+		LOG("thread tid:%d polling after 500ms.\n", tdata->tid);
 		i++;
 	}
 }
