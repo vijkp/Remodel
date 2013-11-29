@@ -21,8 +21,8 @@ error_t file_process_remodelfile() {
 		con_log("error: 'remodelfile' read failed\n");
 		goto end;
 	}
-	fclose(fh);
 end:
+	if (fh != NULL) fclose(fh);
 	return ret;
 }
 
@@ -32,13 +32,13 @@ error_t file_get_remodelfile(FILE **remodel_fh) {
 	/* Search for 'Remodel' file in the current directory */
 	*remodel_fh = fopen("Remodelfile", "r");
 	if (*remodel_fh != NULL) {
-		con_log("'remodelfile' file found.\n");
+		con_log("file found 'remodelfile'\n");
 		ret = SUCCESS;
 		goto found;
 	}
 	*remodel_fh = fopen("remodelfile", "r");
 	if (*remodel_fh != NULL) {
-		con_log("'remodelfile' file found.\n");
+		con_log("file found 'remodelfile'\n");
 		ret = SUCCESS;
 		goto found;
 	}
@@ -199,9 +199,9 @@ error_t file_parse_line(char *line) {
 			if ((dp_type == DP_SRC) || (dp_type == DP_HEADER)) {
 				src_node = new_src_node();
 				strcpy(src_node->name, dp_name);
-				src_node->next = srcfile_head->next;
-				srcfile_head->next = src_node;
-				debug_log("adding src file %s to src list\n", src_node->name);
+				if(add_src_node(src_node) == RM_FAIL) {
+					FREE(src_node);
+				}
 			}
 			dp_node->type = dp_type;
 			strcpy(dp_node->name, dp_name);
@@ -214,17 +214,9 @@ error_t file_parse_line(char *line) {
 				dp_node->next = node->dp_head;
 				node->dp_head = dp_node;
 			}
-			debug_log("file %s added to dep list of %s\n", dp_name, node->name);
 			dp_name = strtok(NULL, ",");
 		}
 	} 
-	
-
-	/* Build dependency list and attach it to the target */
-	//debug_log("com string : %s\n", command_string);
-	//debug_log("dep string : %s\n", dp_string);
-	//con_log("parsed line successfully: %s <- %s : \"%s\"\n",
-	//		target_name, dp_string, command_string);
 	goto end;
 
 error:
@@ -245,6 +237,28 @@ error_t file_check_given_target(char *target) {
 			target_found = true;
 			ret = SUCCESS;
 			goto end;
+		}
+		node = node->next;
+	}
+end:
+	return ret;
+}
+
+error_t file_update_src_md5info(char *src_name, char *md5hash) {
+	error_t   ret = SUCCESS;
+	srcfile_t *node = NULL;
+	bool	  src_found = false;
+
+	node = srcfile_head->next;
+	while ((node != NULL) && (src_found == false)) {
+		if(strcmp(node->name, src_name) == 0) {
+			src_found = true;
+			if (strcmp(node->md5hash, md5hash) != 0) {
+				con_log("src file '%s' changed.\n", src_name);
+				node->md5_changed = true;
+			} else {
+				node->md5_changed = false;
+			}
 		}
 		node = node->next;
 	}

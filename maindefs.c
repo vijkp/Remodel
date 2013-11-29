@@ -4,6 +4,10 @@
 
 #include "maindefs.h"
 
+
+/* external variables */
+extern srcfile_t *srcfile_head;
+
 target_t *new_target_node() {
 	target_t *new_node;
 	new_node = (target_t *)malloc(sizeof(target_t));
@@ -43,9 +47,36 @@ srcfile_t *new_src_node() {
 	memset(new_node->name, '\0', MAX_FILENAME);
 	memset(new_node->md5hash, '\0', MD5_HASHSIZE);
 	new_node->next = NULL;
-	new_node->is_md5_present = false;
-	new_node->need_md5_calc = false;
+	new_node->md5_present = false;
+	new_node->md5_changed = false;
 	return new_node;
+}
+
+error_t add_src_node(srcfile_t *src_node) {
+	error_t ret = RM_FAIL;
+	srcfile_t *tempnode;
+	int src_found = false;
+	
+	tempnode = srcfile_head->next;
+	while((tempnode != NULL) && (src_found == false)) {
+		if (strcmp(tempnode->name, src_node->name) == 0) {
+			src_found = true;
+		}
+		tempnode = tempnode->next;
+	}
+	if (src_found == false) {
+		src_node->next = srcfile_head->next;
+		srcfile_head->next = src_node;
+		debug_log("src file '%s' added to src list.\n",
+				src_node->name);
+		ret = RM_SUCCESS;
+		goto end;
+	} else {
+		debug_log("src file '%s' exists in the list\n", 
+				src_node->name);
+	}
+end:
+	return ret;
 }
 
 dp_type_t check_dp_type(char *name) {

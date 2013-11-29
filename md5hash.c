@@ -1,18 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <openssl/md5.h> /* for md5 calculations */
+#include <sys/stat.h>    /* for saving hashes into a file */
 
+/* Local header files */
 #include "maindefs.h"
 #include "misc.h"
 #include "md5hash.h"
 
-/* for md5 calculations */
-#include <openssl/md5.h>
-
-/* for saving hashes into a file */
-#include <sys/stat.h>
-
-
+/* External variables */
 extern srcfile_t *srcfile_head;
 
 error_t md5_calculate_for_sources() {
@@ -45,6 +42,8 @@ error_t md5_calculate_for_sources() {
 		MD5(fbuffer, fsize, md5hash);
 		md5_to_string(md5hash, md5string);
 		strcpy(node->md5hash, md5string);
+		node->md5_present = true;
+		node->md5_changed = true;
 		debug_log("calculating md5 for %s size: %ld bytes md5: %s\n", 
 				node->name, fsize, md5string);
 		fclose(fd);
@@ -58,7 +57,7 @@ end:
 error_t md5_save_md5_hashes() {
 	error_t   ret = RM_SUCCESS;
 	int       mkdir_ret, ret_val;
-	FILE      *fh;
+	FILE      *fh = NULL;
 	srcfile_t *srcfile_node;
 
 	/* Create .remodel folder */
@@ -75,9 +74,10 @@ error_t md5_save_md5_hashes() {
 		debug_log("directory .remodel created.\n");
 	}
 
-	fh = fopen(RM_MD5HASHES_BKP, "ab+");
+	fh = fopen(RM_MD5HASH_BKPFILE, "ab+");
 	if (fh == NULL) {
-		con_log("error: file doesn't exist\n");
+		con_log("error: cannot_create a file\n");
+		ret = RM_FAIL;
 		goto end;
 	}
 
@@ -89,12 +89,43 @@ error_t md5_save_md5_hashes() {
 		srcfile_node = srcfile_node->next;
 	}
 
-	ret_val = rename(RM_MD5HASHES_BKP, RM_MD5HASHES);
+	ret_val = rename(RM_MD5HASH_BKPFILE, RM_MD5HASH_FILE);
 	if (ret_val == -1) {
 		con_log("error: saving md5 hashes failed.\n");
+		ret = RM_FAIL;
 		goto end;
 	}
 
+end:
+	if (fh != NULL) fclose(fh);
+	return ret;
+}
+error_t md5_load_from_file() {
+	error_t ret = SUCCESS;
+	FILE    *fh = NULL;
+	char	src_name[MAX_FILENAME];
+	char	md5hash[MD5_HASHSIZE + 1];
+	ssize_t read;
+	size_t  len;
+	char    *line;
+	
+	fh = fopen(RM_MD5HASH_FILE, "r");
+	if (fh == NULL) {
+		con_log("project is being built for the first time\n");
+		goto end;
+	}
+
+	while ((read = getline(&line, &len, fh)) != -1) {
+		ret = sscanf(line, "%s %s\n", src_name, md5hash);
+		if (ret != 2) { 
+			continue;
+		}
+		debug_log("line read srcfile %s md5hash %s\n", src_name, md5hash);
+		ret = file_update_src_md5info(src_name, md5hash);
+		if (ret != SUCCESS) {
+			goto end;
+		}
+	}
 end:
 	if (fh != NULL) fclose(fh);
 	return ret;

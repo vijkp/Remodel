@@ -15,8 +15,8 @@ struct srcfile_;
 #define MAX_FILENAME 256
 #define MD5_HASHSIZE 32
 #define RM_APP_DIR	 ".remodel"
-#define RM_MD5HASHES ".remodel/md5hashes"
-#define RM_MD5HASHES_BKP    ".remodel/md5hashes.bkp"
+#define RM_MD5HASH_FILE ".remodel/md5hashes"
+#define RM_MD5HASH_BKPFILE    ".remodel/md5hashes.bkp"
 
 
 typedef enum {
@@ -28,9 +28,9 @@ typedef enum {
 
 typedef struct srcfile_ { 
 	char name[MAX_FILENAME];	/* Holds file path to a source file */
-	char md5hash[2*MD5_HASHSIZE+1];	/* md5 hash string 128 bits */
-	bool is_md5_present;				/* md5 hash calculation needed */
-	bool need_md5_calc;			/* md5 calc needed or not */	
+	char md5hash[MD5_HASHSIZE+1];	/* md5 hash string 128 bits */
+	bool md5_present;				/* md5 hash calculation needed */
+	bool md5_changed;			/* md5 calc needed or not */	
 	struct srcfile_ *next;	    /* pointer to next file_struct_ */
 		                        /* for link lists */
 } srcfile_t;
@@ -53,4 +53,5 @@ target_t     *new_target_node();
 dependency_t *new_dp_node();
 srcfile_t    *new_src_node();
 dp_type_t	 check_dp_type(char *name); 
+error_t		 add_src_node(srcfile_t *src_node);
 #endif /* MAINDEFS_H */

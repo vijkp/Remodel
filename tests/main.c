@@ -7,6 +7,7 @@
 
 
 int main() {
+	///////* change */
     drivers_init();
     drivers_update();
     filesystem_init();

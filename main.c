@@ -40,8 +40,9 @@ int main(int argc, char **argv) {
 	/* Check if the given target is available in the file */
 	result = file_check_given_target(target_name);
 	if (result != SUCCESS) {
-	con_log("error: nothing to build for the target '%s'\n", target_name);  
-	goto end;
+		con_log("error: nothing to build for the target '%s'\n",
+				target_name);  
+		goto end;
 	}
 
 	/* 
@@ -52,6 +53,15 @@ int main(int argc, char **argv) {
 	
 	/* Calculate MD5s of all the source files. Can be done in parallel? */
 	result = md5_calculate_for_sources();
+	if (result != SUCCESS) {
+		goto end;
+	}
+
+	/* 
+	 * Compare and load, if found, sourcefile md5 info to 
+	 * srcfile_head list 
+	 */
+	result = md5_load_from_file();
 	if (result != SUCCESS) {
 		goto end;
 	}
@@ -72,12 +82,12 @@ int main(int argc, char **argv) {
 	target_t        *temp = target_head->next;
 	dependency_t *dp_temp = NULL;
 	while (temp != NULL) {
-		con_log("target: %-18s command: %s\n", temp->name,
+		debug_log("target: %-18s command: %s\n", temp->name,
 				temp->command);
 		dp_temp = temp->dp_head;
-		con_log("\tdependencies:\n");
+		debug_log("\tdependencies:\n");
 		while(dp_temp != NULL) {
-			con_log("\t\t%s\n", dp_temp->name);
+			debug_log("\t\t%s\n", dp_temp->name);
 			dp_temp = dp_temp->next;
 		}
 		temp = temp->next;
@@ -85,16 +95,16 @@ int main(int argc, char **argv) {
 
 	/* print src file list */
 	srcfile_t *temp2 = srcfile_head->next;
-	con_log("List of source files:\n");
+	debug_log("List of source files:\n");
 	while (temp2 != NULL) {
-		con_log("\tfile: %-18s md5: %s\n", temp2->name,
+		debug_log("\tfile: %-18s md5: %s\n", temp2->name,
 				temp2->md5hash);
 		temp2 = temp2->next;
 	}
 
 end:
-	free_target_head();
-	free_srcfile_head();
+//	free_target_head();
+//	free_srcfile_head();
 	return SUCCESS;
 }
 

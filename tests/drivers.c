@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "drivers.h"
-
-
+//
 void drivers_init() {
     int a;
     int b;

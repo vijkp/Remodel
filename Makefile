@@ -25,13 +25,13 @@ clean:
 	rm -fv remodel *.o
 
 # Individual object file and dependencies
-main.o: main.c misc.h
+main.o: main.c misc.h maindefs.h
 	$(CC) $(CFLAGS) -c main.c -o main.o
-misc.o: misc.c misc.h
+misc.o: misc.c misc.h maindefs.h
 	$(CC) $(CFLAGS) -c misc.c -o misc.o
-file.o: file.c misc.h file.h
+file.o: file.c misc.h file.h maindefs.h
 	$(CC) $(CFLAGS) -c file.c -o file.o
-maindefs.o: maindefs.c
+maindefs.o: maindefs.c maindefs.h
 	$(CC) $(CFLAGS) -c maindefs.c -o maindefs.o
-md5hash.o: md5hash.c
+md5hash.o: md5hash.c maindefs.h
 	$(CC) $(CFLAGS) -lssl -lcrypto -c md5hash.c -o md5hash.o 
