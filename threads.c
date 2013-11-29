@@ -31,13 +31,13 @@ end:
 error_t remodel_thread(void *data) {
 	thread_data *tdata;
 	tdata = (thread_data *)data;
-	con_log("started remodel thread tid:%d\n", tdata->tid);
+	LOG("started remodel thread tid:%d\n", tdata->tid);
 	int i = 0;
 
 	while(1) {
 		if (i == tdata->tid) pthread_exit(0);
 		sleep(1);
-		con_log("thread tid:%d polling after 3000ms.\n", tdata->tid);
+		LOG("thread tid:%d polling after 3000ms.\n", tdata->tid);
 		i++;
 	}
 }

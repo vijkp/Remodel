@@ -20,7 +20,7 @@ struct srcfile_;
 typedef _Bool bool;
 
 typedef enum {
-	DP_UNKNOWN,     /* Default value. If unknown, figure out */
+	DP_UNKNOWN,		/* Neither target nor source */
 	DP_TARGET,		/* Dependency is a target */
 	DP_SRC,			/* Dependency is a src file */
 	DP_HEADER		/* Header file */
@@ -47,7 +47,18 @@ typedef struct target_ {
 	char   *command;
 	struct dependency_  *dp_head;
 	struct target_      *next;
+	bool   is_built;
 } target_t;
+
+typedef struct remodel_node_ {
+	dp_type_t  type;
+	target_t   *target;
+	srcfile_t  *srcfile;
+	struct  remodel_node_ *parent; /* points to the parent node */
+	struct  remodel_node_ *child;  /* points to the first child */
+	struct  remodel_node_ *prev;   /* points to the prev sibling */
+	struct  remodel_node_ *next;   /* points to the next sibling */
+} remodel_node_t;
 
 /* External variables */
 extern target_t	 *target_head;
@@ -58,4 +69,5 @@ dependency_t *new_dp_node();
 srcfile_t    *new_src_node();
 dp_type_t	 check_dp_type(char *name); 
 error_t		 add_src_node(srcfile_t *src_node);
+remodel_node_t *new_remodel_node();
 #endif /* MAINDEFS_H */

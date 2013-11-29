@@ -26,7 +26,7 @@ error_t md5_calculate_for_sources() {
 	while (node != NULL) {
 		fd = fopen(node->name, "rb");
 		if (fd == NULL) {
-			con_log("warning: failed to open '%s'\n", node->name);
+			LOG("warning: failed to open '%s'\n", node->name);
 			node = node->next;
 			continue;
 		}
@@ -44,7 +44,7 @@ error_t md5_calculate_for_sources() {
 		strcpy(node->md5hash, md5string);
 		node->md5_present = true;
 		node->md5_changed = true;
-		debug_log("calculating md5 for %s size: %ld bytes md5: %s\n", 
+		DEBUG_LOG("calculating md5 for %s size: %ld bytes md5: %s\n", 
 				node->name, fsize, md5string);
 		fclose(fd);
 		FREE(fbuffer);	
@@ -64,19 +64,19 @@ error_t md5_save_md5_hashes() {
 	mkdir_ret = mkdir(RM_APP_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
 	if (mkdir_ret == -1) {
 		if (errno == EEXIST) {
-			debug_log("directory .remodel already exists\n");
+			DEBUG_LOG("directory .remodel already exists\n");
 		} else if (errno == ENOSPC) {
-			con_log("error: directory creation failed. No enough memory.\n");
+			LOG("error: directory creation failed. No enough memory.\n");
 			ret = RM_FAIL;
 			goto end;
 		}
 	} else {
-		debug_log("directory .remodel created.\n");
+		DEBUG_LOG("directory .remodel created.\n");
 	}
 
 	fh = fopen(RM_MD5HASH_BKPFILE, "ab+");
 	if (fh == NULL) {
-		con_log("error: cannot_create a file\n");
+		LOG("error: cannot_create a file\n");
 		ret = RM_FAIL;
 		goto end;
 	}
@@ -84,14 +84,14 @@ error_t md5_save_md5_hashes() {
 	/* write all md5 hashes of each source file */
 	srcfile_node = srcfile_head->next;
 	while (srcfile_node != NULL) {
-		debug_log("saving %s file hash to a file.\n", srcfile_node->name);
+		DEBUG_LOG("saving %s file hash to a file.\n", srcfile_node->name);
 		fprintf(fh, "%s %s\n", srcfile_node->name, srcfile_node->md5hash);
 		srcfile_node = srcfile_node->next;
 	}
 
 	ret_val = rename(RM_MD5HASH_BKPFILE, RM_MD5HASH_FILE);
 	if (ret_val == -1) {
-		con_log("error: saving md5 hashes failed.\n");
+		LOG("error: saving md5 hashes failed.\n");
 		ret = RM_FAIL;
 		goto end;
 	}
@@ -111,7 +111,7 @@ error_t md5_load_from_file() {
 	
 	fh = fopen(RM_MD5HASH_FILE, "r");
 	if (fh == NULL) {
-		con_log("project is being built for the first time\n");
+		LOG("project is being built for the first time\n");
 		goto end;
 	}
 
@@ -120,7 +120,7 @@ error_t md5_load_from_file() {
 		if (ret != 2) { 
 			continue;
 		}
-		debug_log("line read srcfile %s md5hash %s\n", src_name, md5hash);
+		DEBUG_LOG("line read srcfile %s md5hash %s\n", src_name, md5hash);
 		ret = file_update_src_md5info(src_name, md5hash);
 		if (ret != SUCCESS) {
 			goto end;

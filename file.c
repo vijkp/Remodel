@@ -14,11 +14,11 @@ error_t file_process_remodelfile() {
 	error_t ret = 0;
 
 	if ((ret = file_get_remodelfile(&fh)) != SUCCESS) {
-		con_log("error: 'remodelfile' not found\n");
+		LOG("error: 'remodelfile' not found\n");
 		goto end;
 	}
 	if ((ret = file_read_remodelfile(&fh)) != SUCCESS) {
-		con_log("error: 'remodelfile' read failed\n");
+		LOG("error: 'remodelfile' read failed\n");
 		goto end;
 	}
 end:
@@ -32,13 +32,13 @@ error_t file_get_remodelfile(FILE **remodel_fh) {
 	/* Search for 'Remodel' file in the current directory */
 	*remodel_fh = fopen("Remodelfile", "r");
 	if (*remodel_fh != NULL) {
-		con_log("file found 'remodelfile'\n");
+		LOG("file found 'remodelfile'\n");
 		ret = SUCCESS;
 		goto found;
 	}
 	*remodel_fh = fopen("remodelfile", "r");
 	if (*remodel_fh != NULL) {
-		con_log("file found 'remodelfile'\n");
+		LOG("file found 'remodelfile'\n");
 		ret = SUCCESS;
 		goto found;
 	}
@@ -171,7 +171,7 @@ error_t file_parse_line(char *line) {
 	if (!(target_found && (dp_string_found || command_found))) {
 		len = strlen(line);
 		if (line[len-1] == '\n') line[len-1] = ' ';
-		con_log("error: parsing failed for the line \"%s\"\n", line); 
+		LOG("error: parsing failed for the line \"%s\"\n", line); 
 		ret = RM_PARSE_FAIL;
 		goto error;
 	}
@@ -254,7 +254,7 @@ error_t file_update_src_md5info(char *src_name, char *md5hash) {
 		if(strcmp(node->name, src_name) == 0) {
 			src_found = true;
 			if (strcmp(node->md5hash, md5hash) != 0) {
-				con_log("src file '%s' changed.\n", src_name);
+				LOG("src file '%s' changed.\n", src_name);
 				node->md5_changed = true;
 			} else {
 				node->md5_changed = false;
@@ -269,7 +269,7 @@ end:
 error_t file_mark_all_targets() {
 	error_t ret = RM_SUCCESS;
 
-	debug_log("XXX: fix this\n");
+	DEBUG_LOG("XXX: fix this\n");
 end:
 	return ret;
 }

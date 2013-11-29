@@ -19,16 +19,16 @@ typedef enum {
 	SUCCESS = RM_SUCCESS /* keep this at the end */
 } error_t;
 
-int debug_log_(char *filename, int ln, const char *format, ...);
-int con_log(const char* fmt, ...);
+int DEBUG_LOG_(char *filename, int ln, const char *format, ...);
+int LOG(const char* fmt, ...);
 void print_usage();
 void print_srcfile_list();
 void print_target_list();
 
 #ifdef DEBUG
-	#define debug_log(...) debug_log_(__FILE__, __LINE__, __VA_ARGS__)
+	#define DEBUG_LOG(...) DEBUG_LOG_(__FILE__, __LINE__, __VA_ARGS__)
 #else
-	#define debug_log(...)
+	#define DEBUG_LOG(...)
 #endif /* DEBUG */
 
 #define FREE(x) { \

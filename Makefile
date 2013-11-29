@@ -6,8 +6,7 @@ objs =  main.o misc.o file.o maindefs.o md5hash.o threads.o
 srcs =  main.c misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.c md5hash.h
 
 remodel: CFLAGS = -D DEBUG -ggdb -g3
-nd: CFLAGS = -D NON_DEBUG -ggdb -g3
-d: CFLAGS = -D DEBUG -ggdb -g3
+remodel-nd: CFLAGS = -D NON_DEBUG -ggdb -g3
 
 all: d
 d: remodel

@@ -11,14 +11,14 @@
 #include "md5hash.h"
 #include "threads.h"
 
-
+/* Config macros (used only in this file) */
 #define TOTAL_THREADS 5
 
 /* Globals */
-target_t  *target_head;
-srcfile_t *srcfile_head;
-thread_data thread_list[TOTAL_THREADS];
-
+target_t		*target_head;
+srcfile_t		*srcfile_head;
+remodel_node_t	*remodel_head;
+thread_data		thread_list[TOTAL_THREADS];
 
 int main(int argc, char **argv) {
 	error_t result;
@@ -27,19 +27,24 @@ int main(int argc, char **argv) {
 	
 	/* Argumements check */
 	if (argc == 1) {
-		con_log("using the default target 'DEFAULT'\n");
+		LOG("using the default target 'DEFAULT'\n");
 	} else if (argc == 2) {
 		strcpy(target_name, argv[1]);
-		con_log("using the given target '%s'\n", target_name);
+		LOG("using the given target '%s'\n", target_name);
 	} else {
-		con_log("error: invalid number of arguments (%d)\n", (argc - 1));
+		LOG("error: invalid number of arguments (%d)\n", (argc - 1));
 		print_usage();
 		goto end;
 	}
 
-	/* Read and process remodelfile */
 	target_head  = new_target_node();
 	srcfile_head = new_src_node();
+	remodel_head = new_remodel_node();
+	if (target_head && srcfile_head && remodel_head) {
+		goto end; /* error: system out of memory */
+	}
+
+	/* Read and process remodelfile */
 	result = file_process_remodelfile();
 	if (result != SUCCESS) {
 			goto end;
@@ -48,7 +53,7 @@ int main(int argc, char **argv) {
 	/* Check if the given target is available in the file */
 	result = file_check_given_target(target_name);
 	if (result != SUCCESS) {
-		con_log("error: nothing to build for the target '%s'\n",
+		LOG("error: nothing to build for the target '%s'\n",
 				target_name);  
 		goto end;
 	}
@@ -89,7 +94,7 @@ int main(int argc, char **argv) {
 		goto end;
 	}
 
-	/* Spawn 5 threads and put them in sleep mode */
+	/* Spawn 5 threads to run the commands */
 	result = spawn_threads(total_threads);
 	if (result != SUCCESS) {
 		goto end;
@@ -107,6 +112,7 @@ int main(int argc, char **argv) {
 end:
 //XXX	free_target_head();
 //XXX	free_srcfile_head();
+//XXX   free_remodel_head();
 	return SUCCESS;
 }
 

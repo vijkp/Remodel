@@ -12,6 +12,7 @@ target_t *new_target_node() {
 	target_t *new_node;
 	new_node = (target_t *)malloc(sizeof(target_t));
 	if (new_node == NULL) {
+		LOG("error: system out of memory.\nremodel failed.\n");
 		return new_node;
 	}
 	memset(new_node->name, '\0', MAX_FILENAME);
@@ -29,6 +30,7 @@ dependency_t *new_dp_node() {
 	dependency_t *new_node;
 	new_node = (dependency_t *)malloc(sizeof(dependency_t));
 	if (new_node == NULL) {
+		LOG("error: system out of memory.\nremodel failed.\n");
 		return new_node;
 	}
 	memset(new_node->name, '\0', MAX_FILENAME);
@@ -38,10 +40,25 @@ dependency_t *new_dp_node() {
 	return new_node;
 }
 
+remodel_node_t *new_remodel_node() {
+	remodel_node_t *new_node;
+	new_node = (remodel_node_t *)malloc(sizeof(remodel_node_t));
+	if (new_node == NULL) {
+		LOG("error: system out of memory.\nremodel failed.\n");
+		return new_node;
+	}
+	new_node->type = DP_UNKNOWN;
+	new_node->parent = NULL;
+	new_node->child = NULL;
+	new_node->prev = NULL;
+	new_node->next = NULL;
+}
+
 srcfile_t *new_src_node() {
 	srcfile_t *new_node;
 	new_node = (srcfile_t *)malloc(sizeof(srcfile_t));
 	if (new_node == NULL) {
+		LOG("error: system out of memory.\nremodel failed.\n");
 		return new_node;
 	}
 	memset(new_node->name, '\0', MAX_FILENAME);
@@ -67,12 +84,12 @@ error_t add_src_node(srcfile_t *src_node) {
 	if (src_found == false) {
 		src_node->next = srcfile_head->next;
 		srcfile_head->next = src_node;
-		debug_log("src file '%s' added to src list.\n",
+		DEBUG_LOG("src file '%s' added to src list.\n",
 				src_node->name);
 		ret = RM_SUCCESS;
 		goto end;
 	} else {
-		debug_log("src file '%s' exists in the list\n", 
+		DEBUG_LOG("src file '%s' exists in the list\n", 
 				src_node->name);
 	}
 end:
@@ -90,3 +107,4 @@ dp_type_t check_dp_type(char *name) {
 	if (strcmp(extn, ".cpp") == 0) return DP_SRC;
 	return result;
 }
+
