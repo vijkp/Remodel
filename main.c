@@ -2,20 +2,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /* Local headers */
 #include "maindefs.h"
 #include "misc.h"
 #include "file.h"
 #include "md5hash.h"
+#include "threads.h"
+
+
+#define TOTAL_THREADS 5
 
 /* Globals */
 target_t  *target_head;
 srcfile_t *srcfile_head;
+thread_data thread_list[TOTAL_THREADS];
+
 
 int main(int argc, char **argv) {
 	error_t result;
-	char target_name[128] = "DEFAULT"; 
+	char target_name[MAX_FILENAME] = "DEFAULT";
+	int total_threads = TOTAL_THREADS;
 	
 	/* Argumements check */
 	if (argc == 1) {
@@ -69,15 +77,28 @@ int main(int argc, char **argv) {
 		goto end;
 	}
 
+	/* Create a dependency graph for the given target */
+	result = file_create_dependecy_graph(target_name);
+	if (result != SUCCESS) {
+		goto end;
+	}
+
 	/* Mark all the targets that need build */
 	result = file_mark_all_targets();
 	if (result != SUCCESS) {
 		goto end;
 	}
 
+	/* Spawn 5 threads and put them in sleep mode */
+	result = spawn_threads(total_threads);
+	if (result != SUCCESS) {
+		goto end;
+	}
+	
 
 	/* XXX Build all the targets. Can be done in parallel? */
-	
+		
+	sleep(5);
 
 	/* XXX remove print functions later */
 	print_srcfile_list();

@@ -273,3 +273,12 @@ error_t file_mark_all_targets() {
 end:
 	return ret;
 }
+
+error_t file_create_dependecy_graph(char *target_name) {
+	error_t ret;
+	
+	/* create a new structure to build the dependency graph or like a tree */
+
+end:
+	return ret;
+}

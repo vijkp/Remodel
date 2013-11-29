@@ -22,6 +22,8 @@ typedef enum {
 int debug_log_(char *filename, int ln, const char *format, ...);
 int con_log(const char* fmt, ...);
 void print_usage();
+void print_srcfile_list();
+void print_target_list();
 
 #ifdef DEBUG
 	#define debug_log(...) debug_log_(__FILE__, __LINE__, __VA_ARGS__)
