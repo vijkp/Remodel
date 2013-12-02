@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-
 #include "misc.h"
 
 struct dependency_;
@@ -48,16 +47,17 @@ typedef struct target_ {
 	struct dependency_  *dp_head;
 	struct target_      *next;
 	bool   is_built;
+	int    total_dp;
 } target_t;
 
 typedef struct remodel_node_ {
+	char       name[MAX_FILENAME];
 	dp_type_t  type;
 	target_t   *target;
 	srcfile_t  *srcfile;
 	struct  remodel_node_ *parent; /* points to the parent node */
-	struct  remodel_node_ *child;  /* points to the first child */
-	struct  remodel_node_ *prev;   /* points to the prev sibling */
-	struct  remodel_node_ *next;   /* points to the next sibling */
+	struct  remodel_node_ **children;  /* points to the first child */
+	int		child_nodes;
 } remodel_node_t;
 
 /* External variables */

@@ -8,6 +8,7 @@
 
 extern target_t *target_head;
 extern srcfile_t *srcfile_head;
+extern remodel_node_t *remodel_head;
 
 error_t file_process_remodelfile() {
 	FILE *fh;
@@ -179,6 +180,7 @@ error_t file_parse_line(char *line) {
 	/* Build the list of targets */
 	node = new_target_node();
 	strcpy(node->name, target_name);
+	//DEBUG_LOG("adding target %s\n", target_name);
 	node->command = command_string;
 
 	/* Add to target list */
@@ -192,6 +194,7 @@ error_t file_parse_line(char *line) {
 		dp_type_t dp_type;
 		dp_name = strtok(dp_string, ",");
 		while (dp_name != NULL) {
+			node->total_dp += 1;
 			dp_node = new_dp_node();
 			dp_type = check_dp_type(dp_name);
 			
@@ -205,6 +208,7 @@ error_t file_parse_line(char *line) {
 			}
 			dp_node->type = dp_type;
 			strcpy(dp_node->name, dp_name);
+			//DEBUG_LOG("adding dp %s\n", dp_name);
 
 			/* Update this node to dp_head node of the target */
 			if (node->dp_head == NULL) {
@@ -226,22 +230,36 @@ end:
 	return ret;
 }
 
-error_t file_check_given_target(char *target) {
-	error_t  ret = RM_FAIL;
-	target_t *node;
+target_t *file_get_target(char *target) {
+	target_t *node = NULL;
 	bool     target_found = false;
 
 	node = target_head->next;
 	while (node != NULL) {
 		if (strcmp(node->name, target) == 0) {
 			target_found = true;
-			ret = SUCCESS;
 			goto end;
 		}
 		node = node->next;
 	}
 end:
-	return ret;
+	return node;
+}
+
+srcfile_t *file_get_srcfile(char *srcfile) {
+	srcfile_t *node = NULL;
+	bool     srcfile_found = false;
+
+	node = srcfile_head->next;
+	while (node != NULL) {
+		if (strcmp(node->name, srcfile) == 0) {
+			srcfile_found = true;
+			goto end;
+		}
+		node = node->next;
+	}
+end:
+	return node;
 }
 
 error_t file_update_src_md5info(char *src_name, char *md5hash) {
@@ -274,11 +292,76 @@ end:
 	return ret;
 }
 
-error_t file_create_dependecy_graph(char *target_name) {
-	error_t ret;
+error_t file_create_dependency_graph(target_t *target) {
+	error_t		   ret = RM_SUCCESS;
+	target_t       *target_node = NULL;
+	srcfile_t	   *src_node = NULL;
+	remodel_node_t *rm_node = NULL;
 	
-	/* create a new structure to build the dependency graph or like a tree */
-
+	if (remodel_head) {
+		remodel_head->type = DP_TARGET;
+		remodel_head->target = target;
+		strcpy(remodel_head->name, target->name);
+		remodel_head->parent = NULL;
+	}
+	
+	/* For each target node build the dependency tree */
+	add_nodes_to_remodel(remodel_head);	
 end:
 	return ret;
+}
+
+
+void add_nodes_to_remodel(remodel_node_t *rm_node) {
+	int i;
+	remodel_node_t *node = NULL;
+	target_t	   *tnode = NULL;
+	srcfile_t      *snode = NULL;
+	dependency_t   *dpnode = NULL;
+
+	/* Check the type of node */
+	if ((rm_node->type == DP_SRC) || (rm_node->type == DP_HEADER)) {
+		rm_node->child_nodes = 0;
+		LOG("nothing to add for src node name: %s\n", rm_node->srcfile->name);
+		return;
+	}
+
+	if (rm_node->type == DP_TARGET) {
+		if (rm_node->target->total_dp == 0) {
+			LOG("nothing to add for target with 0 depenencies name: %s\n",
+					rm_node->target->name);
+			return;
+		}
+		rm_node->child_nodes = rm_node->target->total_dp;	
+		rm_node->children = 
+				(remodel_node_t **)malloc((rm_node->child_nodes)*sizeof(remodel_node_t *));
+		tnode = rm_node->target;
+		dpnode = tnode->dp_head; 
+		
+		i = 0;
+		while (dpnode != NULL) {
+			node = new_remodel_node();
+			node->type = dpnode->type;
+			node->parent = rm_node;
+			strcpy(node->name, dpnode->name);
+			
+			DEBUG_LOG("adding dep %s to %s.\n", dpnode->name, rm_node->name);
+			switch (dpnode->type) {
+				case DP_TARGET:
+					node->target = file_get_target(dpnode->name);
+					break;
+				case DP_SRC:
+				case DP_HEADER:
+					node->srcfile = file_get_srcfile(dpnode->name);
+					break;
+			}
+			rm_node->children[i] = node;
+			dpnode = dpnode->next;
+			i++;
+		}
+
+		for (i = 0; i < rm_node->child_nodes; i++) {
+			add_nodes_to_remodel(rm_node->children[i]);
+		}
+	}
 }

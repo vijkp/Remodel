@@ -21,9 +21,10 @@ remodel_node_t	*remodel_head;
 thread_data		thread_list[TOTAL_THREADS];
 
 int main(int argc, char **argv) {
-	error_t result;
-	char target_name[MAX_FILENAME] = "DEFAULT";
-	int total_threads = TOTAL_THREADS;
+	error_t  result;
+	char     target_name[MAX_FILENAME] = "DEFAULT";
+	int		 total_threads = TOTAL_THREADS;
+	target_t *target = NULL;
 	
 	/* Argumements check */
 	if (argc == 1) {
@@ -51,8 +52,8 @@ int main(int argc, char **argv) {
 	}
 
 	/* Check if the given target is available in the file */
-	result = file_check_given_target(target_name);
-	if (result != SUCCESS) {
+	target = file_get_target(target_name);
+	if ( target == NULL) {
 		LOG("error: nothing to build for the target '%s'\n",
 				target_name);  
 		goto end;
@@ -83,7 +84,7 @@ int main(int argc, char **argv) {
 	}
 
 	/* Create a dependency graph for the given target */
-	result = file_create_dependecy_graph(target_name);
+	result = file_create_dependency_graph(target);
 	if (result != SUCCESS) {
 		goto end;
 	}
@@ -105,8 +106,9 @@ int main(int argc, char **argv) {
 		
 
 	/* XXX remove print functions later */
-	print_srcfile_list();
-	print_target_list();
+	//print_srcfile_list();
+	//print_target_list();
+	print_dependency_graph(remodel_head, 0);
 
 end:
 //XXX	free_target_head();

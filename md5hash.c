@@ -44,8 +44,8 @@ error_t md5_calculate_for_sources() {
 		strcpy(node->md5hash, md5string);
 		node->md5_present = true;
 		node->md5_changed = true;
-		DEBUG_LOG("calculating md5 for %s size: %ld bytes md5: %s\n", 
-				node->name, fsize, md5string);
+		//DEBUG_LOG("calculating md5 for %s size: %ld bytes md5: %s\n", 
+		//		node->name, fsize, md5string);
 		fclose(fd);
 		FREE(fbuffer);	
 		node = node->next;
@@ -120,7 +120,7 @@ error_t md5_load_from_file() {
 		if (ret != 2) { 
 			continue;
 		}
-		DEBUG_LOG("line read srcfile %s md5hash %s\n", src_name, md5hash);
+		//DEBUG_LOG("line read srcfile %s md5hash %s\n", src_name, md5hash);
 		ret = file_update_src_md5info(src_name, md5hash);
 		if (ret != SUCCESS) {
 			goto end;

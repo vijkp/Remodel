@@ -16,9 +16,11 @@ target_t *new_target_node() {
 		return new_node;
 	}
 	memset(new_node->name, '\0', MAX_FILENAME);
-	new_node->dp_head = NULL;
-	new_node->command = NULL;
-	new_node->next = NULL;
+	new_node->dp_head  = NULL;
+	new_node->command  = NULL;
+	new_node->next     = NULL;
+	new_node->is_built = true;
+	new_node->total_dp = 0;
 	return new_node;
 }
 
@@ -49,9 +51,8 @@ remodel_node_t *new_remodel_node() {
 	}
 	new_node->type = DP_UNKNOWN;
 	new_node->parent = NULL;
-	new_node->child = NULL;
-	new_node->prev = NULL;
-	new_node->next = NULL;
+	new_node->children = NULL;
+	new_node->child_nodes = 0;
 }
 
 srcfile_t *new_src_node() {
@@ -84,13 +85,13 @@ error_t add_src_node(srcfile_t *src_node) {
 	if (src_found == false) {
 		src_node->next = srcfile_head->next;
 		srcfile_head->next = src_node;
-		DEBUG_LOG("src file '%s' added to src list.\n",
-				src_node->name);
+		//DEBUG_LOG("src file '%s' added to src list.\n",
+		//		src_node->name);
 		ret = RM_SUCCESS;
 		goto end;
 	} else {
-		DEBUG_LOG("src file '%s' exists in the list\n", 
-				src_node->name);
+		//DEBUG_LOG("src file '%s' exists in the list\n", 
+		//		src_node->name);
 	}
 end:
 	return ret;
