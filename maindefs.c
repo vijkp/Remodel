@@ -19,8 +19,9 @@ target_t *new_target_node() {
 	new_node->dp_head  = NULL;
 	new_node->command  = NULL;
 	new_node->next     = NULL;
-	new_node->is_built = true;
+	new_node->build_state = RM_BUILD_READY;
 	new_node->total_dp = 0;
+	new_node->changed_dp = 0;
 	return new_node;
 }
 

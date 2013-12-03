@@ -11,7 +11,7 @@
 extern thread_data thread_list[];
 
 error_t spawn_threads(int number) {
-	error_t ret;
+	error_t ret = SUCCESS;
 	int i = 0;
 
 	for (i = 0; i < number; i++) {

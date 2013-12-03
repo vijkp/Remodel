@@ -88,19 +88,21 @@ int main(int argc, char **argv) {
 	if (result != SUCCESS) {
 		goto end;
 	}
-
+	
 	/* Mark all the targets that need build */
-	result = file_mark_all_targets();
-	if (result != SUCCESS) {
+	result = file_mark_all_targets_for_build(remodel_head);
+	if (result == 0) {
+		LOG("nothing new to build for the target '%s'.\n", target);
 		goto end;
 	}
+
+	//print_all_leaf_nodes(remodel_head);
 
 	/* Spawn 5 threads to run the commands */
 	result = spawn_threads(total_threads);
 	if (result != SUCCESS) {
 		goto end;
 	}
-	
 
 	/* XXX Build all the targets. Can be done in parallel? */
 		
@@ -108,12 +110,12 @@ int main(int argc, char **argv) {
 	/* XXX remove print functions later */
 	//print_srcfile_list();
 	//print_target_list();
-	print_dependency_graph(remodel_head, 0);
 
 end:
-//XXX	free_target_head();
-//XXX	free_srcfile_head();
-//XXX   free_remodel_head();
+	print_dependency_graph(remodel_head, 0);
+	//XXX	free_target_head();
+	//XXX	free_srcfile_head();
+	//XXX   free_remodel_head();
 	return SUCCESS;
 }
 

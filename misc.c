@@ -69,23 +69,22 @@ void print_srcfile_list() {
 }
 
 void print_dependency_graph(remodel_node_t *node, int level) {
-	remodel_node_t *rm_node = NULL;
 	int i;
 	char parentname[MAX_FILENAME] = "";
 	char pad[200] = "";
-	
 	if (node->parent) {
 		strcpy(parentname, node->parent->name);
 	}
-
 	for (i = 0; i < level; i++) {
 		strcat(pad, "\t");
 	}
-	
 	switch (node->type) {
 		case DP_UNKNOWN:
 		case DP_TARGET:
-			LOG("remodel node name:%s%s -> %s(%x)\n", pad, parentname, node->name, node->target);
+			LOG("dependency tree: %s -> (state:%d, "
+					"changed_dp:%d) %s\n", pad, 
+					node->target->build_state, 
+					node->target->changed_dp, node->name);
 			if (node->child_nodes == 0) {
 				goto end;
 			}
@@ -98,11 +97,12 @@ void print_dependency_graph(remodel_node_t *node, int level) {
 			break;
 		case DP_SRC:
 		case DP_HEADER:
-			LOG("remodel node name:%s%s -> %s(%x)\n", pad, parentname, node->name, node->srcfile);
+			LOG("dependency tree: %s -> (md5_changed:%d) %s\n", 
+					pad, node->srcfile->md5_changed,
+					node->name);
 			goto end;
 			break;
 	}
-
 end: 
 	return;
 }

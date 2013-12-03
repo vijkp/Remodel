@@ -272,7 +272,7 @@ error_t file_update_src_md5info(char *src_name, char *md5hash) {
 		if(strcmp(node->name, src_name) == 0) {
 			src_found = true;
 			if (strcmp(node->md5hash, md5hash) != 0) {
-				LOG("src file '%s' changed.\n", src_name);
+				LOG("source file '%s' changed since the last build.\n", src_name);
 				node->md5_changed = true;
 			} else {
 				node->md5_changed = false;
@@ -284,12 +284,56 @@ end:
 	return ret;
 }
 
-error_t file_mark_all_targets() {
+int file_mark_all_targets_for_build(remodel_node_t *node) {
 	error_t ret = RM_SUCCESS;
-
-	DEBUG_LOG("XXX: fix this\n");
+	target_t		*target = NULL;
+	srcfile_t		*srcfile = NULL;
+	int				i;
+	int				changes = 0;
+	
+	switch (node->type) {
+		case DP_UNKNOWN:
+		case DP_TARGET:
+			target = node->target;
+			if (node->child_nodes == 0) {
+				target->build_state = RM_BUILD_READY;
+				DEBUG_LOG("node:%s build_state changed to %d\n", 
+						target->name, target->build_state);
+				goto end;
+			}
+			for (i = 0; i < node->child_nodes; i++) {
+				if (node->children[i]) {
+					changes += 
+						file_mark_all_targets_for_build(node->children[i]);
+				}
+			}
+			if (changes == 0) {
+				target->build_state = RM_BUILD_DONE;
+				DEBUG_LOG("node: %s doesn't need build\n", node->name);
+			} else {
+				target->changed_dp  = changes;
+				target->build_state = RM_BUILD_READY;
+				DEBUG_LOG("node: %s needs build.\n", node->name);
+				changes = 1;
+			}
+			break;
+		case DP_SRC:
+		case DP_HEADER:
+			srcfile = node->srcfile;
+			if (srcfile->md5_present == false) {
+				DEBUG_LOG("node: new srcfile %s is added\n", node->name);
+				changes++;
+				goto end;
+			}
+			if (srcfile->md5_changed == true) {
+				DEBUG_LOG("node: srcfile %s changed\n", node->name);
+				changes++; 
+				goto end;
+			}
+			break;
+	}
 end:
-	return ret;
+	return changes;
 }
 
 error_t file_create_dependency_graph(target_t *target) {
@@ -322,13 +366,13 @@ void add_nodes_to_remodel(remodel_node_t *rm_node) {
 	/* Check the type of node */
 	if ((rm_node->type == DP_SRC) || (rm_node->type == DP_HEADER)) {
 		rm_node->child_nodes = 0;
-		LOG("nothing to add for src node name: %s\n", rm_node->srcfile->name);
+		DEBUG_LOG("source file '%s' has no dependencies.\n", rm_node->srcfile->name);
 		return;
 	}
 
 	if (rm_node->type == DP_TARGET) {
 		if (rm_node->target->total_dp == 0) {
-			LOG("nothing to add for target with 0 depenencies name: %s\n",
+			LOG("target '%s' has no dependencies\n",
 					rm_node->target->name);
 			return;
 		}
@@ -337,7 +381,6 @@ void add_nodes_to_remodel(remodel_node_t *rm_node) {
 				(remodel_node_t **)malloc((rm_node->child_nodes)*sizeof(remodel_node_t *));
 		tnode = rm_node->target;
 		dpnode = tnode->dp_head; 
-		
 		i = 0;
 		while (dpnode != NULL) {
 			node = new_remodel_node();
@@ -345,7 +388,6 @@ void add_nodes_to_remodel(remodel_node_t *rm_node) {
 			node->parent = rm_node;
 			strcpy(node->name, dpnode->name);
 			
-			DEBUG_LOG("adding dep %s to %s.\n", dpnode->name, rm_node->name);
 			switch (dpnode->type) {
 				case DP_TARGET:
 					node->target = file_get_target(dpnode->name);
@@ -359,9 +401,47 @@ void add_nodes_to_remodel(remodel_node_t *rm_node) {
 			dpnode = dpnode->next;
 			i++;
 		}
-
 		for (i = 0; i < rm_node->child_nodes; i++) {
 			add_nodes_to_remodel(rm_node->children[i]);
 		}
 	}
 }
+
+
+bool print_all_leaf_nodes(remodel_node_t *node) {
+	target_t		*target = NULL;
+	srcfile_t		*srcfile = NULL;
+	int i;
+
+	if(node == NULL) {
+		return true;
+	}
+
+	switch (node->type) {
+		case DP_UNKNOWN:
+		case DP_TARGET:
+			target = node->target;
+			if (node->child_nodes == 0) {
+				DEBUG_LOG("node:%s leaf node\n", target->name);
+				return true;;
+			}
+			for (i = 0; i < node->child_nodes; i++) {
+				if (node->children[i]) {
+					if (print_all_leaf_nodes(node->children[i])) {
+						node->children[i] = NULL;
+					}
+				}
+			}
+			break;
+		case DP_SRC:
+		case DP_HEADER:
+			srcfile = node->srcfile;
+			DEBUG_LOG("node: leaf node %s\n", node->name);
+			return true;
+			break;
+	}
+
+return false;
+
+}
+

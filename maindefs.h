@@ -25,6 +25,12 @@ typedef enum {
 	DP_HEADER		/* Header file */
 } dp_type_t; 
 
+typedef enum {
+	RM_BUILD_DONE,		/* target/file is built. No build needed */
+	RM_BUILD_READY,		/* target/file is ready to build. Pick and build */
+	RM_BUILD_RUNNING	/* target/file is being built */
+} build_state_t;
+
 typedef struct srcfile_ { 
 	char name[MAX_FILENAME];	/* Holds file path to a source file */
 	char md5hash[MD5_HASHSIZE+1];	/* md5 hash string 128 bits */
@@ -46,8 +52,9 @@ typedef struct target_ {
 	char   *command;
 	struct dependency_  *dp_head;
 	struct target_      *next;
-	bool   is_built;
-	int    total_dp;
+	build_state_t		build_state;
+	int			total_dp;
+	int			changed_dp;
 } target_t;
 
 typedef struct remodel_node_ {
