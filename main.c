@@ -88,13 +88,17 @@ int main(int argc, char **argv) {
 	if (result != SUCCESS) {
 		goto end;
 	}
-	
+
 	/* Mark all the targets that need build */
 	result = file_mark_all_targets_for_build(remodel_head);
 	if (result == 0) {
 		LOG("nothing new to build for the target '%s'.\n", target);
 		goto end;
 	}
+
+	print_dependency_graph(remodel_head, 0);
+
+	file_remove_unnecessary_nodes(remodel_head);
 
 	//print_all_leaf_nodes(remodel_head);
 
@@ -110,9 +114,8 @@ int main(int argc, char **argv) {
 	/* XXX remove print functions later */
 	//print_srcfile_list();
 	//print_target_list();
-
-end:
 	print_dependency_graph(remodel_head, 0);
+end:
 	//XXX	free_target_head();
 	//XXX	free_srcfile_head();
 	//XXX   free_remodel_head();

@@ -31,8 +31,12 @@ void print_dependency_graph();
 	#define DEBUG_LOG(...)
 #endif /* DEBUG */
 
-#define FREE(x) { \
-		if (x != NULL) free(x);\
-	}
+#define FREE(x)		\
+	do {			\
+		if (x != NULL) {	\
+			free(x);		\
+			x = NULL;		\
+		}			\
+	} while(0)
 #endif /* MISC_H */
 

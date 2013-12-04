@@ -12,5 +12,6 @@ target_t *file_get_target(char *target_name);
 srcfile_t *file_get_srcfile(char *srcfile_name); 
 error_t file_mark_all_targets_for_build(remodel_node_t *);
 error_t file_create_dependency_graph(target_t *target); 
-void add_nodes_to_remodel(remodel_node_t *rmnode);
+error_t file_add_nodes_to_remodel(remodel_node_t *rmnode);
+void file_remove_unnecessary_nodes(remodel_node_t *rmnode);
 #endif /* FILE_H */

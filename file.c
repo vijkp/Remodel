@@ -350,13 +350,17 @@ error_t file_create_dependency_graph(target_t *target) {
 	}
 	
 	/* For each target node build the dependency tree */
-	add_nodes_to_remodel(remodel_head);	
+	ret = file_add_nodes_to_remodel(remodel_head);	
+	if (ret != SUCCESS) {
+		goto end;
+	}
 end:
 	return ret;
 }
 
 
-void add_nodes_to_remodel(remodel_node_t *rm_node) {
+error_t file_add_nodes_to_remodel(remodel_node_t *rm_node) {
+	error_t ret = SUCCESS;
 	int i;
 	remodel_node_t *node = NULL;
 	target_t	   *tnode = NULL;
@@ -366,15 +370,16 @@ void add_nodes_to_remodel(remodel_node_t *rm_node) {
 	/* Check the type of node */
 	if ((rm_node->type == DP_SRC) || (rm_node->type == DP_HEADER)) {
 		rm_node->child_nodes = 0;
-		DEBUG_LOG("source file '%s' has no dependencies.\n", rm_node->srcfile->name);
-		return;
-	}
-
-	if (rm_node->type == DP_TARGET) {
+		DEBUG_LOG("XXX: consider source files having dependecies source "
+				"file '%s' has no dependencies.\n", rm_node->srcfile->name);
+		ret = SUCCESS;
+		goto end;
+	} else if (rm_node->type == DP_TARGET) {
 		if (rm_node->target->total_dp == 0) {
 			LOG("target '%s' has no dependencies\n",
 					rm_node->target->name);
-			return;
+			ret = SUCCESS;
+			goto end;
 		}
 		rm_node->child_nodes = rm_node->target->total_dp;	
 		rm_node->children = 
@@ -391,10 +396,22 @@ void add_nodes_to_remodel(remodel_node_t *rm_node) {
 			switch (dpnode->type) {
 				case DP_TARGET:
 					node->target = file_get_target(dpnode->name);
+					if (node->target == NULL) {
+						LOG("error: target or dependency '%s' is invalid or "
+								"doesn't exist.\n",	dpnode->name);
+						ret = RM_FAIL;
+						goto fail;
+					}
 					break;
 				case DP_SRC:
 				case DP_HEADER:
 					node->srcfile = file_get_srcfile(dpnode->name);
+					if (node->srcfile == NULL) {
+						LOG("error: source file '%s' is invalid or doesn't exist.\n",
+								dpnode->name);
+						ret = RM_FAIL;
+						goto fail;
+					}
 					break;
 			}
 			rm_node->children[i] = node;
@@ -402,8 +419,89 @@ void add_nodes_to_remodel(remodel_node_t *rm_node) {
 			i++;
 		}
 		for (i = 0; i < rm_node->child_nodes; i++) {
-			add_nodes_to_remodel(rm_node->children[i]);
+			ret = file_add_nodes_to_remodel(rm_node->children[i]); 
+			if (ret != SUCCESS) {
+				goto end;
+			}
 		}
+	} else {
+		/* UNKNOWN NODE TYPE */
+		goto end;
+	}
+
+end:
+	return ret;
+
+fail:
+	FREE(rm_node);
+	return ret;
+}
+
+void file_remove_unnecessary_nodes(remodel_node_t *node) {
+	target_t		*target = NULL;
+	srcfile_t		*srcfile = NULL;
+	remodel_node_t  *parent = NULL;
+	int i;
+		
+	if(node == NULL) {
+		DEBUG_LOG("node: stale node\n");
+		return;
+	}
+	switch (node->type) {
+		case DP_UNKNOWN:
+		case DP_TARGET:
+			target = node->target;
+			if (target->changed_dp == 0) {
+				if (node->child_nodes == 0) {
+					return;
+				}
+				/* remove all the dependency nodes */
+				for (i = 0; i < node->child_nodes; i++) {
+					if (node->children[i]) {
+						file_remove_unnecessary_nodes(node->children[i]);
+					}
+				}
+				/* remove the node itself */
+				DEBUG_LOG("node: %s removed.\n", target->name);
+				/* set parents pointer to this target to null */
+				if (node->parent) {
+					parent = node->parent;
+					for (i = 0; i < parent->child_nodes; i++) {
+						if (parent->children[i] == node) {
+							parent->children[i] = NULL;
+							FREE(node);
+							return;
+							break;
+						}
+					}
+				}
+			} else {
+				for (i = 0; i < node->child_nodes; i++) {
+					if (node->children[i]) {
+						file_remove_unnecessary_nodes(node->children[i]);
+					}
+				}
+			}
+			return;
+			break;
+		case DP_SRC:
+		case DP_HEADER:
+			srcfile = node->srcfile;
+			if (srcfile->md5_changed == false) {
+				DEBUG_LOG("node: %s removed.\n", node->name);
+				if (node->parent) {
+					parent = node->parent;
+					for (i = 0; i < parent->child_nodes; i++) {
+						if (parent->children[i] == node) {
+							parent->children[i] = NULL;
+							FREE(node);
+							return;
+							break;
+						}
+					}
+				}
+			}
+			break;
 	}
 }
 

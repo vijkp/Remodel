@@ -31,7 +31,7 @@ end:
 error_t remodel_thread(void *data) {
 	thread_data *tdata;
 	tdata = (thread_data *)data;
-	LOG("started remodel thread tid:%d\n", tdata->tid);
+	//LOG("started remodel thread tid:%d\n", tdata->tid);
 	int i = 0;
 
 	while(1) {

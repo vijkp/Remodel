@@ -82,8 +82,12 @@ error_t md5_save_md5_hashes() {
 	/* write all md5 hashes of each source file */
 	srcfile_node = srcfile_head->next;
 	while (srcfile_node != NULL) {
-		DEBUG_LOG("saving %s file hash to a file.\n", srcfile_node->name);
-		fprintf(fh, "%s %s\n", srcfile_node->name, srcfile_node->md5hash);
+		ret = fprintf(fh, "%s %s\n", srcfile_node->name, srcfile_node->md5hash);
+		if (ret < 0) {
+			LOG("saving %s file hash to a file failed.\n", srcfile_node->name);
+		} else {
+			ret = SUCCESS;
+		}
 		srcfile_node = srcfile_node->next;
 	}
 
