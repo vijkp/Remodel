@@ -86,11 +86,13 @@ error_t build_thread(void *data) {
 		target->build_state = RM_BUILD_RUNNING;
 		pthread_mutex_unlock(&target->mtx);
 
-		LOG("thread %d running \"%s\"\n", tid, target->command);
 		command = target->command;
 				
 		/* Run the command now!  */
-		system(command);
+		if (command[0] != '\0') {
+		    LOG("thread %d running \"%s\"\n", tid, target->command);
+            system(command);
+        }
 			
 		/* Change the state of the build */
 		pthread_mutex_lock(&target->mtx);
