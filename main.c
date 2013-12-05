@@ -11,10 +11,12 @@
 #include "md5hash.h"
 #include "threads.h"
 #include "queue.h"
+#include "main.h"
 
 /* XXX Thigns to do 
  * 1. multiple targets
  * 2. detect cyclic dependencies
+ * 3. Add time taken for the build to finish
  */
 
 /* Config macros (used only in this file) */
@@ -116,10 +118,11 @@ int main(int argc, char **argv) {
     /* Shedule builds to multiple threads */
     main_initiate_builds(remodel_head, target_name);
 end:
-    //XXX   clean_up_queues();
-    //XXX    free_target_head();
-    //XXX    free_srcfile_head();
-    //XXX   free_remodel_head();
+    /* Clean up the temporary data */
+    LOG("Cleaning up.\n");
+    clean_target_list();
+    clean_srcfile_list();
+    LOG("Build done!\n");
     return SUCCESS;
 }
 
@@ -186,8 +189,10 @@ void main_process_response_queue(char *target_name) {
         target = rmnode->target;
         assert(target->build_state == RM_BUILD_DONE);
         if (strcmp(target_name, target->name) == 0) {
-            /* Done with the build. Break the loop */
-            LOG("build completed successfully :)\n");
+            /* Done with the build. Clean up and break the loop */
+            DEBUG_LOG("build completed successfully :)\n");
+            FREE(queue_node);
+            FREE(rmnode);
             break;
         }
 
@@ -217,3 +222,42 @@ void main_process_response_queue(char *target_name) {
     }    
 }
 
+void clean_target_list() {
+    target_t *tmp;
+    target_t *current;
+    dependency_t *dtmp;
+    dependency_t *dcurrent;
+
+    current = target_head;
+    while (current != NULL) {
+        tmp = current->next;
+        if (current->dp_head != NULL) {
+            dcurrent = current->dp_head;
+            while (dcurrent !=NULL) {
+                dtmp = dcurrent->next;
+                DEBUG_LOG("freeing depdendency %s\n", dcurrent->name);
+                FREE(dcurrent);
+                dcurrent = dtmp;
+            }
+        }
+        DEBUG_LOG("freeing target %s\n", current->name);
+        current = tmp;
+    }
+    DEBUG_LOG("freeing target_head\n");
+    FREE(target_head);
+}
+
+void clean_srcfile_list() {
+    srcfile_t *tmp;
+    srcfile_t *current;
+    
+    current = srcfile_head->next;
+    while (current != NULL) {
+        tmp = current->next;
+        DEBUG_LOG("freeing srcfile %s\n", current->name); 
+        FREE(current);
+        current = tmp;
+    }
+    DEBUG_LOG("freeing srcfile_head\n");
+    FREE(srcfile_head);
+}

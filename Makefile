@@ -3,8 +3,7 @@ CC = gcc
 CFLAGS = -D DEBUG
 
 objs =  main.o misc.o file.o maindefs.o md5hash.o threads.o queue.o
-srcs =  main.c misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.c md5hash.h queue.c queue.h
-
+srcs =  main.c main.h misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.c md5hash.h queue.c queue.h
 remodel: CFLAGS = -D DEBUG -ggdb -g3
 remodel-nd: CFLAGS = -D NON_DEBUG -ggdb -g3
 
@@ -24,7 +23,7 @@ clean:
 	rm -fv remodel *.o
 
 # Individual object file and dependencies
-main.o: main.c misc.h maindefs.h threads.h
+main.o: main.c main.h misc.h maindefs.h threads.h
 	$(CC) $(CFLAGS) -c main.c -o main.o
 misc.o: misc.c misc.h maindefs.h
 	$(CC) $(CFLAGS) -c misc.c -o misc.o

@@ -48,7 +48,6 @@ typedef struct srcfile_ {
 
 typedef struct dependency_ {
     char      name[MAX_FILENAME];
-    void      *pointer;
     dp_type_t type;
     struct dependency_ *next;
 } dependency_t;
@@ -83,11 +82,6 @@ srcfile_t    *new_src_node();
 dp_type_t    check_dp_type(char *name); 
 error_t      add_src_node(srcfile_t *src_node);
 remodel_node_t *new_remodel_node();
-
-/* for definitions in main */
-void main_initiate_builds(remodel_node_t *rmnode, char *target);
-void main_dispatch_all_leaf_nodes(remodel_node_t *rmnode);
-void main_process_response_queue(char *target_name);
 
 /* useful macros */
 #define DISPATCH_NODE(node) \

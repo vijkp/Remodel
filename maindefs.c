@@ -37,7 +37,6 @@ dependency_t *new_dp_node() {
         return new_node;
     }
     memset(new_node->name, '\0', MAX_FILENAME);
-    new_node->pointer = NULL;
     new_node->next = NULL;
     new_node->type = DP_UNKNOWN;
     return new_node;
@@ -93,6 +92,8 @@ error_t add_src_node(srcfile_t *src_node) {
     } else {
         //DEBUG_LOG("src file '%s' exists in the list\n", 
         //      src_node->name);
+        ret = RM_FAIL;
+        goto end;
     }
 end:
     return ret;
