@@ -2,13 +2,13 @@
 CC = gcc
 CFLAGS = -D DEBUG
 
-objs =  main.o misc.o file.o maindefs.o md5hash.o threads.o
-srcs =  main.c misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.c md5hash.h
+objs =  main.o misc.o file.o maindefs.o md5hash.o threads.o queue.o
+srcs =  main.c misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.c md5hash.h queue.c queue.h
 
 remodel: CFLAGS = -D DEBUG -ggdb -g3
 remodel-nd: CFLAGS = -D NON_DEBUG -ggdb -g3
 
-all: d
+all: nd
 d: remodel
 nd: remodel-nd
 remodel: $(objs)
@@ -30,10 +30,11 @@ misc.o: misc.c misc.h maindefs.h
 	$(CC) $(CFLAGS) -c misc.c -o misc.o
 file.o: file.c misc.h file.h maindefs.h
 	$(CC) $(CFLAGS) -c file.c -o file.o
-maindefs.o: maindefs.c maindefs.h
+maindefs.o: maindefs.c maindefs.h misc.h
 	$(CC) $(CFLAGS) -c maindefs.c -o maindefs.o
-md5hash.o: md5hash.c maindefs.h
+md5hash.o: md5hash.c maindefs.h misc.h
 	$(CC) $(CFLAGS) -lssl -lcrypto -c md5hash.c -o md5hash.o 
-threads.o: threads.c threads.h maindefs.h
+threads.o: threads.c maindefs.h threads.h
 	$(CC) $(CFLAGS) -c threads.c -o threads.o 
-
+queue.o: queue.c queue.h maindefs.h
+	$(CC) $(CFLAGS) -c queue.c -o queue.o

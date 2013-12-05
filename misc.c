@@ -82,9 +82,9 @@ void print_dependency_graph(remodel_node_t *node, int level) {
 		case DP_UNKNOWN:
 		case DP_TARGET:
 			LOG("dependency tree: %s -> (state:%d, "
-					"changed_dp:%d) %s\n", pad, 
+					"changed_dp:%d N=%d) %s\n", pad, 
 					node->target->build_state, 
-					node->target->changed_dp, node->name);
+					node->target->changed_dp, node->child_nodes, node->name);
 			if (node->child_nodes == 0) {
 				goto end;
 			}

@@ -437,6 +437,14 @@ fail:
 	return ret;
 }
 
+void file_cleanup_nodes_for_unchanged_files(remodel_node_t *node) {
+	/* remove unwanted nodes */
+	file_remove_unnecessary_nodes(node);
+	
+	/*  updatethe children count to each node in the tree */
+	file_update_children_count(node);
+}
+
 void file_remove_unnecessary_nodes(remodel_node_t *node) {
 	target_t		*target = NULL;
 	srcfile_t		*srcfile = NULL;
@@ -462,7 +470,6 @@ void file_remove_unnecessary_nodes(remodel_node_t *node) {
 					}
 				}
 				/* remove the node itself */
-				DEBUG_LOG("node: %s removed.\n", target->name);
 				/* set parents pointer to this target to null */
 				if (node->parent) {
 					parent = node->parent;
@@ -487,8 +494,8 @@ void file_remove_unnecessary_nodes(remodel_node_t *node) {
 		case DP_SRC:
 		case DP_HEADER:
 			srcfile = node->srcfile;
-			if (srcfile->md5_changed == false) {
-				DEBUG_LOG("node: %s removed.\n", node->name);
+			//if (srcfile->md5_changed == false) {
+				//DEBUG_LOG("node: %s removed.\n", node->name);
 				if (node->parent) {
 					parent = node->parent;
 					for (i = 0; i < parent->child_nodes; i++) {
@@ -500,11 +507,56 @@ void file_remove_unnecessary_nodes(remodel_node_t *node) {
 						}
 					}
 				}
-			}
+			//}
 			break;
 	}
 }
 
+void file_update_children_count(remodel_node_t *node) {
+	remodel_node_t **new_children, **old_children;
+	int child_prev = 0;
+	int child_after = 0;
+	int i, j;
+
+	if (node == NULL) {
+		return;
+	}
+	child_prev = node->child_nodes;
+	if (child_prev == 0) {
+		return;
+	}
+
+	/* count the number of valid child nodes */
+	for (i = 0; i < child_prev; i++) {
+		if (node->children[i] != NULL) {
+			child_after++;
+		}
+	}
+	if (child_prev != child_after) {
+		/* update child_nodes */
+		node->child_nodes = child_after;
+		new_children = (remodel_node_t **)malloc((node->child_nodes)*
+				sizeof(remodel_node_t *));
+
+		/* now update the children pointers*/
+		for (i = 0, j = 0; i < child_prev; i++) {
+			if (node->children[i] != NULL) {
+				new_children[j] = node->children[i];
+				j++;
+			}
+		}
+		old_children   = node->children; 
+		node->children = new_children;
+		FREE(old_children);
+	}
+	
+	/* now call the children nodes */
+	for (j = 0; j < node->child_nodes; j++) {
+		if (node->children[j] != NULL) {
+			file_update_children_count(node->children[j]);
+		}
+	}
+}
 
 bool print_all_leaf_nodes(remodel_node_t *node) {
 	target_t		*target = NULL;
@@ -514,7 +566,7 @@ bool print_all_leaf_nodes(remodel_node_t *node) {
 	if(node == NULL) {
 		return true;
 	}
-
+	//DEBUG_LOG("trying to print node %s\n", node->name);
 	switch (node->type) {
 		case DP_UNKNOWN:
 		case DP_TARGET:
@@ -526,7 +578,7 @@ bool print_all_leaf_nodes(remodel_node_t *node) {
 			for (i = 0; i < node->child_nodes; i++) {
 				if (node->children[i]) {
 					if (print_all_leaf_nodes(node->children[i])) {
-						node->children[i] = NULL;
+						//node->children[i] = NULL;
 					}
 				}
 			}
