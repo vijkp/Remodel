@@ -1,11 +1,11 @@
 #!/bin/sh
 
-echo "//changed" >> tests/network.c
-echo "//changed" >> tests/main.c
-echo "//changed" >> tests/sched.h
-echo "//changed" >> tests/filesyste.c
+echo "//changed" >> testcases/testcase-1/network.c
+echo "//changed" >> testcases/testcase-1/main.c
+echo "//changed" >> testcases/testcase-1/sched.h
+echo "//changed" >> testcases/testcase-1/filesyste.c
 
-cd ./tests/
-../remodel $1
-cd ../
+cd ./testcases/testcase-1/
+../../remodel $1
+cd ../../
 
