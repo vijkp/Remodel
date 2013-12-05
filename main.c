@@ -15,6 +15,7 @@
 /* XXX Thigns to do 
  * 1. multiple targets
  * 2. detect cyclic dependencies
+ * 3. remove lock on target_t for performance improvement
  */
 
 /* Config macros (used only in this file) */
