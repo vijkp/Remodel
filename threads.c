@@ -81,11 +81,11 @@ error_t build_thread(void *data) {
         assert(rmnode->type == DP_TARGET);
         target = rmnode->target;
         assert(target->build_state == RM_BUILD_ONQ);
-        
-        pthread_mutex_lock(&target->mtx);
-        target->build_state = RM_BUILD_RUNNING;
-        pthread_mutex_unlock(&target->mtx);
 
+        /* Change the build state to RUNNING */
+        target->build_state = RM_BUILD_RUNNING;
+
+        /* Get the command from the target */
         command = target->command;
                 
         /* Run the command now!  */
@@ -94,10 +94,8 @@ error_t build_thread(void *data) {
             system(command);
         }
             
-        /* Change the state of the build */
-        pthread_mutex_lock(&target->mtx);
+        /* Change the state of the build to DONE */
         target->build_state = RM_BUILD_DONE;
-        pthread_mutex_unlock(&target->mtx);
 
         /* Done with the command. Now put the node in response_queue */
         pthread_mutex_lock(&response_queue->mtx);
@@ -132,16 +130,13 @@ error_t monitor_thread(void *data) {
         if (qnode == NULL) {
             continue;
         }
-
         assert(qnode != NULL);
         rmnode = (remodel_node_t *)qnode->data;
         assert(rmnode->type == DP_TARGET);
         target = rmnode->target;
-    
-        pthread_mutex_lock(&target->mtx);
+        
+        /* Get the build state (read only) */
         build_state = target->build_state;
-        pthread_mutex_unlock(&target->mtx);
-
         if (build_state == RM_BUILD_DONE) {
             /* Build done for the node. Put into response_queue */
             pthread_mutex_lock(&response_queue->mtx);

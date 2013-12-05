@@ -15,7 +15,6 @@
 /* XXX Thigns to do 
  * 1. multiple targets
  * 2. detect cyclic dependencies
- * 3. remove lock on target_t for performance improvement
  */
 
 /* Config macros (used only in this file) */
@@ -139,14 +138,13 @@ void main_dispatch_all_leaf_nodes(remodel_node_t *rmnode) {
     assert(rmnode != NULL);
     if (rmnode->child_nodes == 0) {
         assert(rmnode->type == DP_TARGET);
-
-        pthread_mutex_lock(&rmnode->target->mtx);
+        
+        /* Change the build state */
         build_state = rmnode->target->build_state;
         if (build_state == RM_BUILD_READY) {
             rmnode->target->build_state = RM_BUILD_ONQ;
         }
-        pthread_mutex_unlock(&rmnode->target->mtx);
-
+        /* Create a new node and add it to a Queue */
         queue_node = queue_node_new();
         queue_node->data = (void *)rmnode;
         if (build_state == RM_BUILD_READY) {
@@ -157,7 +155,6 @@ void main_dispatch_all_leaf_nodes(remodel_node_t *rmnode) {
         }
         return;
     }
-
     /* Find leafs in the child nodes */
     for (i = 0; i < rmnode->child_nodes; i++) {
         main_dispatch_all_leaf_nodes(rmnode->children[i]);

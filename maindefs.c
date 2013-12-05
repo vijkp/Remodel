@@ -22,7 +22,6 @@ target_t *new_target_node() {
     new_node->build_state = RM_BUILD_READY;
     new_node->total_dp = 0;
     new_node->changed_dp = 0;
-    pthread_mutex_init(&new_node->mtx, NULL);
     return new_node;
 }
 

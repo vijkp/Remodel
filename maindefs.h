@@ -61,7 +61,6 @@ typedef struct target_ {
     build_state_t       build_state;
     int                 total_dp;
     int                 changed_dp;
-    pthread_mutex_t     mtx;
 } target_t;
 
 typedef struct remodel_node_ {
