@@ -8,7 +8,8 @@ typedef _Bool bool;
 typedef struct queue_node_ {
     struct queue_node_ *prev;
     struct queue_node_ *next;
-    void *data;
+    void  *data;
+    bool  signal;
 } queue_node_t;
 
 typedef struct queue_ {

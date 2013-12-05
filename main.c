@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 /* Local headers */
 #include "maindefs.h"
@@ -14,9 +15,8 @@
 #include "main.h"
 
 /* XXX Thigns to do 
- * 1. multiple targets
- * 2. detect cyclic dependencies
- * 3. Add time taken for the build to finish
+ * XXX 1. multiple targets
+ * XXX 2. detect cyclic dependencies
  */
 
 /* Config macros (used only in this file) */
@@ -31,27 +31,35 @@ queue_t         *dispatch_queue, *monitor_queue, *response_queue;
 
 int main(int argc, char **argv) {
     error_t      result;
+    double       time_start = 0, time_end = 0, time_taken = 0;
     char         target_name[MAX_FILENAME] = "DEFAULT";
     int          total_threads = BUILD_THREADS;
     target_t     *target = NULL;
     queue_node_t *queue_node = NULL;
     int          i = 0;
+        
+    /* For performance calculations */
+    time_start = get_time_in_sec();
 
     /* Argumements check */
     if (argc == 1) {
-        LOG("using the default target 'DEFAULT'\n");
+        LOG("building the default target 'DEFAULT'\n");
     } else if (argc == 2) {
         strcpy(target_name, argv[1]);
-        LOG("using the given target '%s'\n", target_name);
+        LOG("building the given target '%s'\n", target_name);
     } else {
         LOG("error: invalid number of arguments (%d)\n", (argc - 1));
         print_usage();
         goto end;
     }
 
+    /* Initialize globals */
     target_head  = new_target_node();
     srcfile_head = new_src_node();
     remodel_head = new_remodel_node();
+    for (i = 0; i < (total_threads+1); i++) {
+        thread_list[i].tid = -1; 
+    }
     if (!(target_head && srcfile_head && remodel_head)) {
         goto end; /* error: system out of memory */
     }
@@ -64,10 +72,19 @@ int main(int argc, char **argv) {
 
     /* Check if the given target is available in the file */
     target = file_get_target(target_name);
-    if ( target == NULL) {
-        LOG("error: nothing to build for the target '%s'\n",
+    if (target == NULL) {
+        LOG("error: given target '%s' doesn't exist.\n",
                 target_name);  
         goto end;
+    } else {
+        /* check if there is just a command to run */
+        if ((target->dp_head == NULL) &&
+                (target->command[0] != '\0')) {
+            LOG("thread 0 running the command \"%s\"\n",
+                    target->command);
+            system(target->command);
+            goto end;
+        }
     }
 
     /* Calculate MD5s of all the source files. Can be done in parallel? */
@@ -84,6 +101,15 @@ int main(int argc, char **argv) {
 
     /* Save <sourcefile> <md5> in a temp file in .remodel/ folder */
     result = md5_save_md5_hashes();
+    if (result != SUCCESS) {
+        goto end;
+    }
+    
+    /* Initialize queues and threads here */
+    dispatch_queue = queue_new("dispatch queue");
+    monitor_queue  = queue_new("monitor queue");
+    response_queue  = queue_new("response queue");
+    result = spawn_threads(total_threads);
     if (result != SUCCESS) {
         goto end;
     }
@@ -104,25 +130,18 @@ int main(int argc, char **argv) {
     /* Clean the dependency tree */
     file_cleanup_nodes_for_unchanged_files(remodel_head);
 
-    /* Initialize queues here */
-    dispatch_queue = queue_new("dispatch queue");
-    monitor_queue  = queue_new("monitor queue");
-    response_queue  = queue_new("response queue");
-
-    /* Start all threads (build threads and monitor thread) */
-    result = spawn_threads(total_threads);
-    if (result != SUCCESS) {
-        goto end;
-    }
-
     /* Shedule builds to multiple threads */
     main_initiate_builds(remodel_head, target_name);
+    LOG("Cleaning up.\n");
+    LOG("Build done!\n");
 end:
     /* Clean up the temporary data */
-    LOG("Cleaning up.\n");
+    send_killsignal_to_threads(total_threads);
+    clean_queues();
     clean_target_list();
     clean_srcfile_list();
-    LOG("Build done!\n");
+        time_end = get_time_in_sec();
+    print_time_taken(time_start, time_end);
     return SUCCESS;
 }
 
@@ -227,7 +246,10 @@ void clean_target_list() {
     target_t *current;
     dependency_t *dtmp;
     dependency_t *dcurrent;
-
+    
+    if (target_head == NULL) {
+        return;
+    }
     current = target_head;
     while (current != NULL) {
         tmp = current->next;
@@ -250,7 +272,10 @@ void clean_target_list() {
 void clean_srcfile_list() {
     srcfile_t *tmp;
     srcfile_t *current;
-    
+
+    if (srcfile_head == NULL) {
+        return;
+    }
     current = srcfile_head->next;
     while (current != NULL) {
         tmp = current->next;
@@ -260,4 +285,55 @@ void clean_srcfile_list() {
     }
     DEBUG_LOG("freeing srcfile_head\n");
     FREE(srcfile_head);
+}
+
+void clean_queues() {
+    FREE(dispatch_queue);
+    FREE(monitor_queue); 
+    FREE(response_queue);
+}
+
+double get_time_in_sec() {
+    double time_sec;
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    time_sec = time.tv_sec*1000 + (time.tv_usec/1000.0);
+    return time_sec;
+}
+
+void send_killsignal_to_threads(int total_threads) {
+    int threads_alive = 0;
+    queue_node_t *queue_node = NULL;
+    int i;
+
+    for (i = 0; i < (total_threads); i++) {
+        if (thread_list[i].tid != -1) {
+            threads_alive++;
+            /* for each alive thread send a signal to kill */
+            queue_node = queue_node_new();
+            queue_node->signal = true;
+            DISPATCH_NODE(queue_node);
+        }
+    }
+    /* send one to monitor thread */
+    threads_alive++;
+    queue_node = queue_node_new();
+    queue_node->signal = true;
+    MONITOR_NODE(queue_node);
+
+    /* now wait for the threads to respond */
+    while (threads_alive > 0) {
+        pthread_mutex_lock(&response_queue->mtx);
+        queue_node = queue_get_node(response_queue);
+        pthread_mutex_unlock(&response_queue->mtx);
+        if (queue_node == NULL) {
+            continue;
+        }
+        if (queue_node->signal) {
+            /* free the qnode and reduce the live thread count */
+            DEBUG_LOG("kill signal ack received.\n");
+            FREE(queue_node);
+            threads_alive--;
+        }
+    }
 }

@@ -76,6 +76,17 @@ error_t build_thread(void *data) {
         if (qnode == NULL) {
             continue;
         }
+
+        /* Check the kill signal (it is sent by the parent thread) */
+        if (qnode->signal) {
+            /* Ack the main thread that this thread is going down */
+            pthread_mutex_lock(&response_queue->mtx);
+            queue_add_node(response_queue, qnode);
+            pthread_mutex_unlock(&response_queue->mtx);
+            DEBUG_LOG("thread %d is going down\n", tid);
+            pthread_exit(NULL);
+        }
+
         /* Do the processing on the node. Run the build command */
         rmnode = (remodel_node_t *)qnode->data;
         assert(rmnode->type == DP_TARGET);
@@ -130,11 +141,21 @@ error_t monitor_thread(void *data) {
         if (qnode == NULL) {
             continue;
         }
+        /* Check the kill signal (it is sent by the parent thread) */
+        if (qnode->signal) {
+            /* Ack the main thread that this thread is going down */
+            pthread_mutex_lock(&response_queue->mtx);
+            queue_add_node(response_queue, qnode);
+            pthread_mutex_unlock(&response_queue->mtx);
+            DEBUG_LOG("thread %d is going down\n", tid);
+            pthread_exit(NULL);
+        }
+
         assert(qnode != NULL);
         rmnode = (remodel_node_t *)qnode->data;
         assert(rmnode->type == DP_TARGET);
         target = rmnode->target;
-        
+
         /* Get the build state (read only) */
         build_state = target->build_state;
         if (build_state == RM_BUILD_DONE) {

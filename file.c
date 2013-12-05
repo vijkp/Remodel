@@ -17,11 +17,11 @@ error_t file_process_remodelfile() {
     error_t ret = 0;
 
     if ((ret = file_get_remodelfile(&fh)) != SUCCESS) {
-        LOG("error: 'remodelfile' not found\n");
+        LOG("error: 'remodelfile' doesn't exist.\n");
         goto end;
     }
     if ((ret = file_read_remodelfile(&fh)) != SUCCESS) {
-        LOG("error: 'remodelfile' read failed\n");
+        LOG("error: 'remodelfile' read failed.\n");
         goto end;
     }
 end:
@@ -35,13 +35,13 @@ error_t file_get_remodelfile(FILE **remodel_fh) {
     /* Search for 'Remodel' file in the current directory */
     *remodel_fh = fopen("Remodelfile", "r");
     if (*remodel_fh != NULL) {
-        LOG("file found 'remodelfile'\n");
+        DEBUG_LOG("file found 'remodelfile'.\n");
         ret = SUCCESS;
         goto found;
     }
     *remodel_fh = fopen("remodelfile", "r");
     if (*remodel_fh != NULL) {
-        LOG("file found 'remodelfile'\n");
+        DEBUG_LOG("file found 'remodelfile'.\n");
         ret = SUCCESS;
         goto found;
     }
@@ -373,7 +373,7 @@ error_t file_add_nodes_to_remodel(remodel_node_t *rm_node) {
         goto end;
     } else if (rm_node->type == DP_TARGET) {
         if (rm_node->target->total_dp == 0) {
-            LOG("target '%s' has no dependencies\n",
+            DEBUG_LOG("target '%s' has no dependencies\n",
                     rm_node->target->name);
             ret = SUCCESS;
             goto end;

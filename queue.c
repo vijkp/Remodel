@@ -130,6 +130,7 @@ queue_node_t* queue_node_new() {
     node->prev = NULL;
     node->next = NULL;
     node->data = NULL;
+    node->signal = false;
     return node;
 }
 
