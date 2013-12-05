@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Local Headers */
 #include "maindefs.h"
 #include "file.h"
 #include "misc.h"
 
+/* External variables */
 extern target_t       *target_head;
 extern srcfile_t      *srcfile_head;
 extern remodel_node_t *remodel_head;
