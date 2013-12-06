@@ -1,0 +1,46 @@
+DEFAULT <- all
+
+all		<- snap
+
+snap	<- main, drivers, filesystem, network, sched : "gcc main.o drivers.o filesystem.o network.o sched.o -o snap"
+
+main    <- main.o, drivers, sched, device : "gcc -c main.c -o main.o"
+main.o  <- main.c, sched.h, drivers.h : "gcc -c main.c -o main.o"
+				
+drivers <- drivers.o, drivers1.o,drivers2.o,drivers3.o,drivers4.o : "gcc -c drivers.c -o drivers.o"
+drivers.o <- drivers.c, network.o : "gcc -c drivers.c -o drivers.o" 
+drivers1.o <- drivers1.c, network.o : "gcc -c drivers1.c -o drivers1.o" 
+drivers2.o <- drivers2.c, network.o : "gcc -c drivers2.c -o drivers2.o" 
+drivers3.o <- drivers3.c, network.o : "gcc -c drivers3.c -o drivers3.o" 
+drivers4.o <- drivers4.c, network.o : "gcc -c drivers4.c -o drivers4.o" i
+
+filesystem <- filesystem.o, filesystem1.o,filesystem2.o,filesystem3.o,filesystem4.o : "gcc -c filesystem.c -o filesystem.o"
+filesystem.o <- filesystem.c, network.o : "gcc -c filesystem.c -o filesystem.o"
+filesystem1.o <- filesystem1.c, network.o : "gcc -c filesystem1.c -o filesystem1.o"
+filesystem2.o <- filesystem2.c, network.o : "gcc -c filesystem2.c -o filesystem2.o"
+filesystem3.o <- filesystem3.c, network.o : "gcc -c filesystem3.c -o filesystem3.o"
+filesystem4.o <- filesystem4.c, network.o : "gcc -c filesystem4.c -o filesystem4.o"
+
+network <- drivers, network.o, network1.o,network2.o,network3.o : "gcc -c network.c -o network.o"
+network.o <- network.c, network.h : "gcc -c network.c -o network.o"
+network1.o <- network1.c, network.o : "gcc -c network1.c -o network1.o"
+network2.o <- network2.c, network.o : "gcc -c network2.c -o network2.o"
+network3.o <- network3.c, network.o : "gcc -c network3.c -o network3.o"
+
+device <- drivers, device.o, device1.o,device2.o,device3.o : "gcc -c device.c -o device.o"
+device.o <- device.c, device.h : "gcc -c device.c -o device.o"
+device1.o <- device1.c, device.o : "gcc -c device1.c -o device1.o"
+device2.o <- device2.c, device.o : "gcc -c device2.c -o device2.o"
+device3.o <- device3.c, device.o : "gcc -c device3.c -o device3.o"
+
+sched <- sched.o, sched1.o,sched2.o,sched3.o,sched4.o : "gcc -c sched.c -o sched.o"
+sched.o <- sched.c, sched.h : "gcc -c sched.c -o sched.o"
+sched1.o <- sched1.c, sched.h : "gcc -c sched1.c -o sched1.o"
+sched2.o <- sched2.c, sched.h : "gcc -c sched2.c -o sched2.o"
+sched3.o <- sched3.c, sched.h : "gcc -c sched3.c -o sched3.o"
+sched4.o <- sched4.c, sched.h : "gcc -c sched4.c -o sched4.o"
+
+clean		 <-: "rm -rf *.o snap .remodel/"
+
+
+
