@@ -1,3 +1,8 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : misc.h 
+*****************************************************/
 #ifndef MISC_H
 #define MISC_H
 

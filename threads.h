@@ -1,3 +1,8 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : threads.h 
+*****************************************************/
 #ifndef THREADS_H
 #define THREADS_H
 

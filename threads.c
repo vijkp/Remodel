@@ -1,3 +1,10 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : threads.c 
+* Description: Contains functions for creation of
+* threads and thread functions.
+*****************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

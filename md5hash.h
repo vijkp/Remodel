@@ -1,3 +1,8 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : md5hash.h 
+*****************************************************/
 #ifndef MD5HASH_H
 #define MD5HASH_H
 

@@ -1,3 +1,9 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : misc.c 
+* Description: Contains miscellaneous functions. 
+*****************************************************/
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>

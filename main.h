@@ -1,3 +1,8 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : main.h 
+*****************************************************/
 #ifndef MAIN_H
 #define MAIN_H
 

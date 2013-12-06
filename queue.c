@@ -1,3 +1,10 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : queue.c 
+* Description: Contains queue implementation used in
+* this project. 
+*****************************************************/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

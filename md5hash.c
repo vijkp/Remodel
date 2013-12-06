@@ -1,3 +1,11 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : md5hash.c 
+* Description: This file has function related to 
+* calculation of md5 hashes of a given file, storing 
+* and reading of md5 hashes from disk.
+*****************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

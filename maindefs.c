@@ -1,3 +1,11 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : maindefs.c 
+* Description: This file defines important structures
+* used for creating src file list, target list and 
+* dependency tree.
+*****************************************************/
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>

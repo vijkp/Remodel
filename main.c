@@ -1,3 +1,10 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : main.c 
+* Description: This file has main() function and other
+* important functions.
+*****************************************************/
 /* Standard headers */
 #include <stdio.h>
 #include <stdlib.h>

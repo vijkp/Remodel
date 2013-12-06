@@ -1,3 +1,11 @@
+/*****************************************************
+* Copyright (c) 2013. All rights reserved.
+* Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
+* File : file.c 
+* Description: This file contains all functions 
+* related to parsing of remodel and processing of 
+* targets and source files.
+*****************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
