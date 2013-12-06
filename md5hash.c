@@ -26,9 +26,11 @@ error_t md5_calculate_for_sources() {
     while (node != NULL) {
         fd = fopen(node->name, "rb");
         if (fd == NULL) {
-            LOG("warning: failed to open '%s'\n", node->name);
-            node = node->next;
-            continue;
+            LOG("error: file '%s' doesn't exist\n", node->name);
+            ret = RM_FAIL;
+            goto end;
+            //node = node->next;
+            //continue;
         }
         
         fseek(fd, 0, SEEK_END);
@@ -38,7 +40,7 @@ error_t md5_calculate_for_sources() {
                     1)*(sizeof(unsigned char)));
         fread(fbuffer, 1, fsize, fd);
     
-        /* Calculate MD5 */
+        /* Calculate MD5 hash */
         MD5(fbuffer, fsize, md5hash);
         md5_to_string(md5hash, md5string);
         strcpy(node->md5hash, md5string);

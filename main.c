@@ -16,7 +16,6 @@
 
 /* XXX Thigns to do 
  * XXX 1. multiple targets
- * XXX 2. detect cyclic dependencies
  */
 
 /* Config macros (used only in this file) */

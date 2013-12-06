@@ -270,7 +270,7 @@ error_t file_update_src_md5info(char *src_name, char *md5hash) {
         if(strcmp(node->name, src_name) == 0) {
             src_found = true;
             if (strcmp(node->md5hash, md5hash) != 0) {
-                LOG("source file '%s' changed since the last build.\n", src_name);
+                DEBUG_LOG("source file '%s' changed since the last build.\n", src_name);
                 node->md5_changed = true;
             } else {
                 node->md5_changed = false;
@@ -395,7 +395,7 @@ error_t file_add_nodes_to_remodel(remodel_node_t *rm_node) {
                     node->target = file_get_target(dpnode->name);
                     if (node->target == NULL) {
                         LOG("error: target or dependency '%s' is invalid or "
-                                "doesn't exist.\n",    dpnode->name);
+                                "doesn't exist.\n", dpnode->name);
                         ret = RM_FAIL;
                         goto fail;
                     }
@@ -410,6 +410,15 @@ error_t file_add_nodes_to_remodel(remodel_node_t *rm_node) {
                         goto fail;
                     }
                     break;
+            }
+            /* Check for cyclic dependency before adding the node */
+            if (file_check_cyclic_dependency(node)) {
+                /* Detected a cyclic dependency. Bail out. */
+                LOG("error: cyclic dependency detected for target/file '%s'\n", node->name); 
+                file_print_detected_dependency(node);
+                ret = RM_FAIL;
+                FREE(node);
+                goto fail;
             }
             rm_node->children[i] = node;
             dpnode = dpnode->next;
@@ -431,6 +440,45 @@ end:
 fail:
     FREE(rm_node);
     return ret;
+}
+
+bool file_check_cyclic_dependency(remodel_node_t *rmnode) {
+    remodel_node_t *rmparent;
+    char           *name;
+
+    name = rmnode->name;
+    rmparent = rmnode->parent; 
+    while (rmparent != NULL) {
+        DEBUG_LOG("comparing '%s' to parent name '%s'\n", name,
+                rmparent->name);
+        if(strcmp(name, rmparent->name) == 0) {
+            /* Cyclic dependency detected. Bail out. */
+            return true;       
+        }
+        rmparent = rmparent->parent;
+    }
+    return false;
+}
+
+void file_print_root_to_node(remodel_node_t *node) {
+    if (!(node && node->parent)) {
+        printf("%s ", node->name);
+        return;
+    } else {
+        file_print_root_to_node(node->parent);
+        printf("-> ");
+        printf("%s ", node->name);
+    }
+}
+
+void file_print_detected_dependency(remodel_node_t *node) {
+    remodel_node_t *rmparent;
+    char           *name;
+    
+    LOG("info: detected cyclic dependency: ");
+    file_print_root_to_node(node);
+    printf("\n");
+
 }
 
 void file_cleanup_nodes_for_unchanged_files(remodel_node_t *node) {
@@ -552,7 +600,8 @@ void file_update_children_count(remodel_node_t *node) {
     }
 }
 
-bool print_all_leaf_nodes(remodel_node_t *node) {
+/* Deprecated. Not tested well. */
+bool file_print_all_leaf_nodes(remodel_node_t *node) {
     target_t    *target = NULL;
     srcfile_t   *srcfile = NULL;
     int         i;
@@ -570,7 +619,7 @@ bool print_all_leaf_nodes(remodel_node_t *node) {
             }
             for (i = 0; i < node->child_nodes; i++) {
                 if (node->children[i]) {
-                    if (print_all_leaf_nodes(node->children[i])) {
+                    if (file_print_all_leaf_nodes(node->children[i])) {
                     }
                 }
             }
