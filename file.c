@@ -3,7 +3,7 @@
 * Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
 * File : file.c 
 * Description: This file contains all functions 
-* related to parsing of remodel and processing of 
+* related to parsing of remodelfile and processing of 
 * targets and source files.
 *****************************************************/
 #include <stdio.h>
@@ -269,7 +269,7 @@ end:
 }
 
 error_t file_update_src_md5info(char *src_name, char *md5hash) {
-    error_t   ret = SUCCESS;
+    error_t   ret = RM_SUCCESS;
     srcfile_t *node = NULL;
     bool      src_found = false;
 

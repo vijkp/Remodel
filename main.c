@@ -2,8 +2,8 @@
 * Copyright (c) 2013. All rights reserved.
 * Author: Vijay Kumar Pasikanti <vijaykp@cs.umass.edu>
 * File : main.c 
-* Description: This file has main() function and other
-* important functions.
+* Description: This file contains main() function 
+* and other important functions that main executes.
 *****************************************************/
 /* Standard headers */
 #include <stdio.h>
@@ -68,12 +68,14 @@ int main(int argc, char **argv) {
         thread_list[i].tid = -1; 
     }
     if (!(target_head && srcfile_head && remodel_head)) {
+        LOG("error: malloc failed; system out of memory.\n");
         goto end; /* error: system out of memory */
     }
 
     /* Read and process remodelfile */
     result = file_process_remodelfile();
     if (result != SUCCESS) {
+        DEBUG_LOG("error: remodelfile read failed.\n");
         goto end;
     }
 
@@ -98,28 +100,20 @@ int main(int argc, char **argv) {
     /* Calculate MD5s of all the source files. Can be done in parallel? */
     result = md5_calculate_for_sources();
     if (result != SUCCESS) {
+        DEBUG_LOG("error: md5 calculation for sources failed.\n");
         goto end;
     }
 
     /* Compare and load, sourcefile md5 info into srcfile_t nodes*/
     result = md5_load_from_file();
     if (result != SUCCESS) {
-        goto end;
+        DEBUG_LOG("warning: unable to load md5 hashes from prev build.\n", result);
     }
-
-        
-    /* Initialize queues and threads here */
-    dispatch_queue = queue_new("dispatch queue");
-    monitor_queue  = queue_new("monitor queue");
-    response_queue  = queue_new("response queue");
-    result = spawn_threads(total_threads);
-    if (result != SUCCESS) {
-        goto end;
-    }
-
+    
     /* Create a dependency graph for the given target */
     result = file_create_dependency_graph(target);
     if (result != SUCCESS) {
+        DEBUG_LOG("error: md5 calculation for sources failed.\n");
         goto end;
     }
 
@@ -135,6 +129,21 @@ int main(int argc, char **argv) {
 
     /* Clean the dependency tree */
     file_cleanup_nodes_for_unchanged_files(remodel_head);
+
+#ifdef DEBUG
+    print_dependency_graph(remodel_head, 0);
+#endif 
+    
+    /* Initialize queues and threads here */
+    dispatch_queue = queue_new("dispatch queue");
+    monitor_queue  = queue_new("monitor queue");
+    response_queue  = queue_new("response queue");
+    result = spawn_threads(total_threads);
+    if (result != SUCCESS) {
+        LOG("error: unable to create threads\n");
+        goto end;
+    }
+
 
     /* Shedule builds to multiple threads */
     main_initiate_builds(remodel_head, target_name);

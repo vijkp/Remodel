@@ -115,13 +115,14 @@ end:
     return ret;
 }
 error_t md5_load_from_file() {
-    error_t ret = SUCCESS;
+    error_t ret = RM_SUCCESS;
     FILE    *fh = NULL;
     char    src_name[MAX_FILENAME];
     char    md5hash[MD5_HASHSIZE + 1];
     ssize_t read;
     size_t  len;
     char    *line;
+    int     nchar = 2;
     
     fh = fopen(RM_MD5HASH_FILE, "r");
     if (fh == NULL) {
@@ -129,16 +130,20 @@ error_t md5_load_from_file() {
         goto end;
     }
 
+    DEBUG_LOG("im here %d %d \n", RM_SUCCESS, SUCCESS);
     while ((read = getline(&line, &len, fh)) != -1) {
-        ret = sscanf(line, "%s %s\n", src_name, md5hash);
-        if (ret != 2) { 
+        nchar = sscanf(line, "%s %s\n", src_name, md5hash);
+        if (nchar != 2) { 
             continue;
         }
         DEBUG_LOG("reading md5hash of src file %s\n", src_name);
         ret = file_update_src_md5info(src_name, md5hash);
-        if (ret != SUCCESS) {
+        if (ret != RM_SUCCESS) {
             goto end;
         }
+    }
+    if (nchar != 2) {
+        DEBUG_LOG("info: metafile .remodel/md5hashes is corrupted\n");
     }
 end:
     if (fh != NULL) fclose(fh);
