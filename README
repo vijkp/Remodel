@@ -31,6 +31,23 @@ WHAT IS REMODEL?
       baz <- foo.o, bar.o: "g++ foo.o bar.o -o baz"
       foo.o <- foo.cpp : "g++ -c foo.cpp -o foo.o"
       bar.o <- bar.cpp: "g++ -c bar.cpp -o bar.o"
-  
-  Dependencies:
-  libssl-dev (ubuntu 12.04)
+
+PLATFORM AND DEPENDENCIES
+  * Platform: linux
+  * Dependencies: openssl, glibc (package name libssl-dev) 
+  * Compiler: gcc 4.6
+  * Programming Language: C
+
+HOW TO USE REMODEL?
+  * Change directory to 'remodel' source directory.
+  * Before building remodel make sure that 'libssl-dev' and 'gcc' are installed.
+  * Run 'make' for building remodel for testing.
+  * Alternatively, use 'make debug' command to build a debug build. Debug buildi
+    is useful while debugging. It builds the project with gdb flags and enables
+    debug log messages. Make sure to run make clean before switching from
+    debug to prod build and vice versa.
+  * Build generates the binary remodel .
+  * Change to any test directory and run remodel either by copying remodel 
+    binary to test directory or providing the full path to remodel .
+
+For more details please go through Report.pdf

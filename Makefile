@@ -4,18 +4,17 @@ CFLAGS = -D DEBUG
 
 objs =  main.o misc.o file.o maindefs.o md5hash.o threads.o queue.o
 srcs =  main.c main.h misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.c md5hash.h queue.c queue.h
-remodel: CFLAGS = -D DEBUG -ggdb -g3
-remodel-nd: CFLAGS = -D NON_DEBUG
+remodel: CFLAGS = -D NON_DEBUG
+remodel-debug: CFLAGS = -D DEBUG -ggdb -g3
 
-all:  nd
-d: remodel
-nd: remodel-nd
-remodel: $(objs)
+all:  remodel
+debug: remodel-debug
+remodel-debug: $(objs)
 	$(CC) $(CFLAGS) $(objs)  -lssl -lcrypto -lpthread -lm -o remodel.new
 	mv -f remodel.new remodel 
 
 # non-debug build
-remodel-nd: $(objs)
+remodel: $(objs)
 	$(CC) $(CFLAGS)  $(objs) -lssl -lcrypto -lpthread -lm -o remodel.new
 	mv -f remodel.new remodel
 
