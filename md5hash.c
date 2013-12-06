@@ -98,6 +98,8 @@ error_t md5_save_md5_hashes() {
         LOG("error: saving md5 hashes failed.\n");
         ret = RM_FAIL;
         goto end;
+    } else {
+        DEBUG_LOG("md5 hashses saved successfully.\n");
     }
 
 end:

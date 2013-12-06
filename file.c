@@ -367,8 +367,7 @@ error_t file_add_nodes_to_remodel(remodel_node_t *rm_node) {
     /* Check the type of node */
     if ((rm_node->type == RM_TYPE_SRC) || (rm_node->type == RM_TYPE_HEADER)) {
         rm_node->child_nodes = 0;
-        DEBUG_LOG("XXX: consider source files having dependecies source "
-                "file '%s' has no dependencies.\n", rm_node->srcfile->name);
+        DEBUG_LOG("source file '%s' has no dependencies.\n", rm_node->srcfile->name);
         ret = SUCCESS;
         goto end;
     } else if (rm_node->type == RM_TYPE_TARGET) {
@@ -449,8 +448,6 @@ bool file_check_cyclic_dependency(remodel_node_t *rmnode) {
     name = rmnode->name;
     rmparent = rmnode->parent; 
     while (rmparent != NULL) {
-        DEBUG_LOG("comparing '%s' to parent name '%s'\n", name,
-                rmparent->name);
         if(strcmp(name, rmparent->name) == 0) {
             /* Cyclic dependency detected. Bail out. */
             return true;       

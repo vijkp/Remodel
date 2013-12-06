@@ -14,10 +14,6 @@
 #include "queue.h"
 #include "main.h"
 
-/* XXX Thigns to do 
- * XXX 1. multiple targets
- */
-
 /* Config macros (used only in this file) */
 #define BUILD_THREADS 3
 
@@ -104,12 +100,7 @@ int main(int argc, char **argv) {
         goto end;
     }
 
-    /* Save <sourcefile> <md5> in a temp file in .remodel/ folder */
-    result = md5_save_md5_hashes();
-    if (result != SUCCESS) {
-        goto end;
-    }
-    
+        
     /* Initialize queues and threads here */
     dispatch_queue = queue_new("dispatch queue");
     monitor_queue  = queue_new("monitor queue");
@@ -125,6 +116,9 @@ int main(int argc, char **argv) {
         goto end;
     }
 
+#ifdef DEBUG
+    print_dependency_graph(remodel_head, 0);
+#endif 
     /* Mark all the targets that need build */
     result = file_mark_all_targets_for_build(remodel_head);
     if (result == 0) {
@@ -138,6 +132,13 @@ int main(int argc, char **argv) {
     /* Shedule builds to multiple threads */
     main_initiate_builds(remodel_head, target_name);
     LOG("build done!\n");
+    
+    /* If everything goes well. Save MD5 hashes in a file in .remodel/ */
+    result = md5_save_md5_hashes();
+    if (result != SUCCESS) {
+        goto end;
+    }
+
 end:
     LOG("cleaning up\n");
     /* Clean up the temporary data */

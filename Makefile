@@ -7,7 +7,7 @@ srcs =  main.c main.h misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.
 remodel: CFLAGS = -D DEBUG -ggdb -g3
 remodel-nd: CFLAGS = -D NON_DEBUG
 
-all:  d
+all:  nd
 d: remodel
 nd: remodel-nd
 remodel: $(objs)
