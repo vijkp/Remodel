@@ -25,3 +25,4 @@ void file_remove_unnecessary_nodes(remodel_node_t *rmnode);
 void file_cleanup_nodes_for_unchanged_files(remodel_node_t *rmnode);
 void file_update_children_count(remodel_node_t *rmnode);
 #endif /* FILE_H */
+/* version v1.1 */

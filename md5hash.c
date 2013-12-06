@@ -161,3 +161,4 @@ void md5_to_string(unsigned char *md, char *result) {
     result[32] = '\0';
 }
 
+/* version v1.1 */

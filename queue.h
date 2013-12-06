@@ -38,3 +38,4 @@ queue_node_t* queue_prev_node(queue_t* queue, queue_node_t* node);
 void          queue_node_free(queue_node_t* node);
 
 #endif /*QUEUE_H*/
+/* version v1.1 */

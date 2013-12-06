@@ -169,3 +169,4 @@ queue_node_t* queue_prev_node(queue_t* queue, queue_node_t* node) {
     return node->prev;
 }
 
+/* version v1.1 */

@@ -119,3 +119,4 @@ rm_file_type_t check_dp_type(char *name) {
     return result;
 }
 
+/* version v1.1 */

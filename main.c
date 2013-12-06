@@ -376,3 +376,4 @@ int calculate_number_of_threads_needed(remodel_node_t *rmnode) {
     LOG("using (%d) threads for parallel builds\n", nthreads);
     return nthreads;
 }
+/* version v1.1 */

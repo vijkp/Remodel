@@ -20,3 +20,4 @@ error_t build_thread();
 error_t monitor_thread();
 
 #endif /* THREADS_H */
+/* version v1.1 */

@@ -33,3 +33,4 @@ int calculate_number_of_threads_needed(remodel_node_t *rmnode);
     } while(0)
 
 #endif /*MAIN_H*/
+/* version v1.1 */
