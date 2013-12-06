@@ -46,11 +46,6 @@ int main(int argc, char **argv) {
         LOG("building the default target 'DEFAULT'\n");
     } else if (argc == 2) {
         strcpy(target_name, argv[1]);
-        if ((strcmp(target_name, "-h") == 0) ||
-                (strcmp(target_name, "--help") == 0)) {
-                print_usage();
-                goto far_end;
-        }
         DEBUG_LOG("building the given target '%s'\n", target_name);
     } else {
         LOG("error: invalid number of arguments (%d)\n", (argc - 1));

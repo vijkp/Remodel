@@ -1,11 +1,10 @@
 
 CC = gcc
-CFLAGS = -D DEBUG
 
 objs =  main.o misc.o file.o maindefs.o md5hash.o threads.o queue.o
 srcs =  main.c main.h misc.c misc.h file.c file.h maindefs.c maindefs.h md5hash.c md5hash.h queue.c queue.h
 remodel: CFLAGS = -D DEBUG -ggdb -g3
-remodel-nd: CFLAGS = -D NON_DEBUG
+remodel-nd: CFLAGS = -D NON_DEBUG 
 
 all:  d
 d: remodel

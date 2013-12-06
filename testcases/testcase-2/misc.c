@@ -33,10 +33,9 @@ int LOG(const char *format, ...) {
 }
 
 void print_usage() {
-    LOG("Usage: remodel [<target_name> | --help | -h]\n");
-    printf("         Description: <target_name> is optional. Default value 'DEFAULT'\n");
-    printf("                      is used when none specified.\n");
-    printf("         Options: '-h' and '--help' will print this message\n");
+    LOG("usage: remodel [<target_name>]\n");
+    LOG("   when no <target_name> is specified default\n");
+    LOG("   target 'DEFAULT' is used.\n");
 }
 
 /* Print target list along with dependencies */
