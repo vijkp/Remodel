@@ -11,12 +11,12 @@ all:  nd
 d: remodel
 nd: remodel-nd
 remodel: $(objs)
-	$(CC) $(CFLAGS) $(objs)  -lssl -lcrypto -lpthread -o remodel.new
+	$(CC) $(CFLAGS) $(objs)  -lssl -lcrypto -lpthread -lm -o remodel.new
 	mv -f remodel.new remodel 
 
 # non-debug build
 remodel-nd: $(objs)
-	$(CC) $(CFLAGS)  $(objs) -lssl -lcrypto -lpthread -o remodel.new
+	$(CC) $(CFLAGS)  $(objs) -lssl -lcrypto -lpthread -lm -o remodel.new
 	mv -f remodel.new remodel
 
 clean: 

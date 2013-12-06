@@ -15,6 +15,7 @@ void clean_srcfile_list();
 void clean_queues();
 double get_time_in_sec();
 void send_killsignal_to_threads();
+int calculate_number_of_threads_needed(remodel_node_t *rmnode);
 
 #define print_time_taken(x, y)   \
     do {                            \

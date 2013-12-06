@@ -75,8 +75,9 @@ void print_srcfile_list() {
 
 }
 
-void print_dependency_graph(remodel_node_t *node, int level) {
+int print_dependency_graph(remodel_node_t *node, int level) {
     int i;
+    int total_nodes = 0;
     char parentname[MAX_FILENAME] = "";
     char pad[200] = "";
     if (node->parent) {
@@ -88,28 +89,30 @@ void print_dependency_graph(remodel_node_t *node, int level) {
     switch (node->type) {
         case RM_TYPE_UNKNOWN:
         case RM_TYPE_TARGET:
-            LOG("dependency tree: %s -> (state:%d, "
+            DEBUG_LOG("dependency tree: %s -> (state:%d, "
                     "changed_dp:%d N=%d) %s\n", pad, 
                     node->target->build_state, 
                     node->target->changed_dp, node->child_nodes, node->name);
+            total_nodes++;
             if (node->child_nodes == 0) {
                 goto end;
             }
             level++;
             for (i = 0; i < node->child_nodes; i++) {
                 if (node->children[i]) {
-                    print_dependency_graph(node->children[i], level);
+                    total_nodes += print_dependency_graph(node->children[i], level);
                 }
             }
             break;
         case RM_TYPE_SRC:
         case RM_TYPE_HEADER:
-            LOG("dependency tree: %s -> (md5_changed:%d) %s\n", 
+            DEBUG_LOG("dependency tree: %s -> (md5_changed:%d) %s\n", 
                     pad, node->srcfile->md5_changed,
                     node->name);
+            total_nodes++;
             goto end;
             break;
     }
 end: 
-    return;
+    return total_nodes;
 }

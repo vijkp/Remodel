@@ -11,6 +11,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <math.h>
 
 /* Local headers */
 #include "maindefs.h"
@@ -129,6 +130,8 @@ int main(int argc, char **argv) {
 
     /* Clean the dependency tree */
     file_cleanup_nodes_for_unchanged_files(remodel_head);
+    
+    total_threads = calculate_number_of_threads_needed(remodel_head);
 
 #ifdef DEBUG
     print_dependency_graph(remodel_head, 0);
@@ -363,4 +366,13 @@ void send_killsignal_to_threads(int total_threads) {
             threads_alive--;
         }
     }
+}
+
+int calculate_number_of_threads_needed(remodel_node_t *rmnode) {
+    int nthreads = 1;
+    nthreads = print_dependency_graph(rmnode);
+    nthreads = (int)(sqrt(nthreads ));
+    if (nthreads == 0) nthreads = 1;
+    LOG("using (%d) threads for parallel builds\n", nthreads);
+    return nthreads;
 }

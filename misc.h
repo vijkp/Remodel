@@ -29,7 +29,7 @@ int LOG(const char* fmt, ...);
 void print_usage();
 void print_srcfile_list();
 void print_target_list();
-void print_dependency_graph();
+int  print_dependency_graph();
 #ifdef DEBUG
     #define DEBUG_LOG(...) DEBUG_LOG_(__FILE__, __LINE__, __VA_ARGS__)
 #else
