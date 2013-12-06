@@ -14,7 +14,7 @@ network.o    <-network.c, sched.h, network.h :"gcc -c network.c -o network.o"
 
 sched.o<-sched.c, sched.h: "gcc -c sched.c -o sched.o"
 
-clean		 <-: "rm -rf *.o snap"
+clean		 <-: "rm -rf *.o snap .remodel/"
 
 
 
