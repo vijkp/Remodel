@@ -199,7 +199,42 @@ University of Massachusetts Amherst
 	Change to any test directory and run \remodel either by copying \remodel binary to test directory or providing the full path to \remodel.
 	\end{enumerate}
 \subsection{Testcases}
-	Test cases are provided in \texttt{testcases/} directory. Shell scripts in \texttt{testscripts/} can be used for testing test cases in \texttt{testcases/} directory.
+	Test cases are provided in \texttt{testcases/} directory. Shell scripts in \texttt{testscripts/} can be used for testing test cases in \texttt{testcases/} directory.\\
+	\\
+	For example:\\
+	\fontsize{10pt}{12pt}
+	\shellcmds{[vijaykp@linux ~/test]\$ git clone https://github.com/vijkp/Remodel}
+	\shellcmds{Cloning into 'Remodel'...}
+	\shellcmds{[vijaykp@linux ~/test]\$ cd Remodel/}
+	\shellcmds{[vijaykp@linux ~/test/Remodel]\$ ls}
+	\shellcmds{Makefile  Report      file.c  main.c  maindefs.c  md5hash.c  misc.c  queue.c  test.sh}
+	\shellcmds{threads.h README    Report.pdf  file.h  main.h  maindefs.h  md5hash.h  misc.h  queue.h}
+	\shellcmds{threads.c testscripts testcases}
+	\shellcmds{[vijaykp@linux ~/test/Remodel]\$}
+	\shellcmds{[vijaykp@linux ~/test/Remodel]\$ make}
+	\shellcmds{gcc -D NON\_DEBUG -c main.c -o main.o}
+	\shellcmds{gcc -D NON\_DEBUG -c misc.c -o misc.o}
+	\shellcmds{gcc -D NON\_DEBUG -c file.c -o file.o}
+	\shellcmds{gcc -D NON\_DEBUG -c maindefs.c -o maindefs.o}
+	\shellcmds{gcc -D NON\_DEBUG -lssl -lcrypto -c md5hash.c -o md5hash.o}
+	\shellcmds{gcc -D NON\_DEBUG -c threads.c -o threads.o}
+	\shellcmds{gcc -D NON\_DEBUG -c queue.c -o queue.o}
+	\shellcmds{gcc -D NON\_DEBUG  main.o misc.o file.o maindefs.o md5hash.o threads.o queue.o -lssl -lcrypto -lpthread -lm -o remodel.new}
+	\shellcmds{mv -f remodel.new remodel}
+	\shellcmds{[vijaykp@linux ~/test/Remodel]\$ cd testcases/testcase-1/}
+	\shellcmds{[vijaykp@linux ~/test/Remodel/testcases/testcase-1]\$ ../../remodel}
+	\shellcmds{remodel: building the default target 'DEFAULT'}
+	\shellcmds{remodel: using (3) threads for parallel builds}
+	\shellcmds{remodel: thread 3 running "gcc -c sched.c -o sched.o"}
+	\shellcmds{remodel: thread 2 running "gcc -c network.c -o network.o"}
+	\shellcmds{remodel: thread 1 running "gcc -c filesystem.c -o filesystem.o"}
+	\shellcmds{remodel: thread 2 running "gcc -c main.c -o main.o"}
+	\shellcmds{remodel: thread 3 running "gcc -c drivers.c -o drivers.o"}
+	\shellcmds{remodel: thread 3 running "gcc main.o drivers.o filesystem.o network.o sched.o -o snap"}
+	\shellcmds{remodel: build done!}
+	\shellcmds{remodel: cleaning up}
+	\shellcmds{remodel: remodel took 890 milliseconds to complete}
+	\shellcmds{[vijaykp@linux ~/test/Remodel/testcases/testcase-1]\$}
 \section{Source code}
 	\begin{itemize}
 	\item
