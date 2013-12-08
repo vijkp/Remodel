@@ -7,12 +7,12 @@ WHAT IS REMODEL?
   timestamps as a happens-before relation means that it can fail to build
   properly. This is especially true during parallel builds. 
 
-  Remodel will also take a series of dependencies and targets, etc. (grammar
+  Remodel also takes a series of dependencies and targets, etc. (grammar
   below), but unlike make, it will use MD5 hashes to detect new content and
   provide, together with the dependency chain, a happens-before relation 
   (md5diff(oldA,newA) => everything that depends on A must be rebuilt). It
   executes all independent (non-conflicting) commands in parallel, using
-  threads or processes. 
+  threads. 
 
   Remodel uses a different grammar than make. Dependencies can appear in 
   any order. If you execute remodel with no arguments, it should start with
