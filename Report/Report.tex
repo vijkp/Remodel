@@ -1,0 +1,192 @@
+\documentclass[12pt,letterpaper,titlepage, one-sided]{article}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage{changepage}
+
+
+% Title Page
+\title{Remodel\\
+(Systems Course Project)\\
+Fall 2013}
+\author{Submitted by\\
+Vijay Kumar Pasikanti\\
+\texttt{(vijaykp@cs.umass.edu)}\\
+\\
+\\
+School of Computer Science\\
+University of Massachusetts Amherst
+}
+
+\begin{document}
+\newcommand{\remodel}{\texttt{remodel }}
+\newcommand{\shellcmd}[1]{\\\indent\indent\texttt{#1}}
+\maketitle
+\tableofcontents
+\newpage
+\section{Introduction}
+  \texttt{Remodel} is a replacement program for GNU \texttt{make}. \texttt{make} takes a series of dependencies and builds targets by executing commands. Its use of UNIX timestamps as a happens-before relation means that it can fail to build properly. This is especially true during parallel builds. \\ \\
+  \texttt{Remodel} also takes a series of dependencies and targets, etc. (grammar below), but unlike make, it will use MD5 hashes to detect new content and provide, together with the dependency chain, a happens-before relation (md5diff(oldA,newA) => everything that depends on A must be rebuilt). It executes all independent (non-conflicting) commands in parallel, using multiple threads. 
+  
+	\subsection{Grammar}
+	\remodel uses a different grammar than \texttt{make}. Dependencies can appear in any order. If you execute remodel with no arguments, it should start with the pseudo-target DEFAULT. Otherwise, the root is the argument to remodel, as in remodel foo.o. 
+	\begin{adjustwidth}{.6in} {0pt}
+	\texttt{\\
+    program \ \ \ ::= production*\\
+    production ::= target '<-' dependency (':' '"' command '"")\\
+    dependency ::= filename (',' filename)*\\
+    target\ \ \ \ \ ::= filename (',' filename)*\\
+    }
+	\end{adjustwidth}
+	Here's an example that builds the program baz from two source files, foo.cpp and bar.cpp. 
+	\begin{adjustwidth}{.6in} {0pt}
+	\texttt{\\
+    DEFAULT <- baz\\
+    baz\ \ \ \ \ <- foo.o, bar.o: "g++ foo.o bar.o -o baz"\\
+    foo.o  \ \ <- foo.cpp : "g++ -c foo.cpp -o foo.o"\\
+    bar.o \ \ <- bar.cpp: "g++ -c bar.cpp -o bar.o"\\
+ 	}
+	\end{adjustwidth}
+	\subsection{Platform and dependencies}
+	\begin{itemize}
+		\item Platform: linux  
+		\item Dependencies: \texttt{openssl, glibc} (package name \texttt{libssl-dev})
+		\item Compiler: \texttt{gcc 4.6}
+		\item Programming Language: \texttt{C}
+	\end{itemize}
+
+\section{Implementation}
+\remodel is completely written in 'C' language using standard \texttt{glibc} and \texttt{openssl} libraries and works for any flavor of Linux OS. \remodel uses multiple threads defined by the user while building files which are non-dependent on each other.
+\\ \\
+\remodel computes MD5 hash string of each source file to identify the changed files. After the build MD5 hash strings are stored in a file \texttt{md5hases} within the directory \texttt{.remodel} at the root directory level of the project that was built. File \texttt{.remodel/md5hashes} is read and all the hash strings are loaded into \remodel at the beginning of its execution.
+
+	\subsection{Algorithm}
+		\begin{enumerate}
+		\item
+		Validate arguments.
+		\item
+		Read and parse \texttt{Remodelfile}. Make lists of targets and source files.
+		\item
+		Read \texttt{.remodel/md5hashes} file and load hash strings from the previous build.
+		\item
+		Generate dependency tree starting from the given \texttt{target}.
+		\item
+		Generate MD5 hash strings of each source file. Compare and identify the files that changed. If the build is successful, the new MD5 hash strings are saved to disk.
+		\item
+		Mark changed source files and targets that need build in the \textit{dependency tree} and generate a reduced tree by removing the unnecessary targets.
+		\item
+		Start $N$ \textit{build threads} for parallel builds and a \textit{monitor thread}. $N$ is calculated based on the number of targets that need build using $N = \sqrt{targets}$
+		\item
+		Starting from the leafs of the \textit{dependency tree} place each target in a \textit{dispatch queue} where they are picked up by \textit{build threads}. \textit{Build threads} send an acknowledgment to \texttt{main} program as soon as the build is done for the target it processed.
+		\item
+		Based on the responses from the \textit{build threads} and \textit{monitor thread} \texttt{main} program processes the \textit{dependency tree} to choose the next target to build and places it in the \textit{dispatch queue}.
+		\end{enumerate}
+		\subsection{Meta files}
+		\begin{itemize}
+		\item
+		\remodel uses a meta file \texttt{md5hashes} to store md5 hash strings of source files. It resides inside the directory \texttt{.remodel} in project's root directory.
+		\item
+		The format it uses is \texttt{<src file name> <md5 hash string>}. For example: 
+		\shellcmd{sched.c 105fcbfaf254826be856c5f166f76e21}
+		\shellcmd{network.h 379058d4f4738993f6e37a60f448e36a}
+		\shellcmd{network.c 8586deee068420812704a88a7274f91b}
+		\shellcmd{filesystem.h 20e986d00cadeb329b0143cf95319548v}
+		
+		\item
+		MD5 hashes are read in the beginning of \remodel execution to compare with the current source file MD5 hashes.
+		\item
+		MD5 hashes calculated in the current build are stored back into the meta file only if the build is successful.
+		
+		\end{itemize}
+		\subsection{Threads for parallel builds}
+		Threads are created and run using pthread library. There are two types of threads used in this program viz. 1.\textit{build thread} and 2.\textit{monitor thread}. Each type of thread is described below. 
+		
+		\subsubsection{Build Thread} 
+		\begin{itemize}
+		\item
+		\textit{Build threads} are created before the start of the building process. Number of \textit{build threads} are \textit{N} and \textit{N} is chosen based on the number of targets that needs build. If \textit{targets} are the number of targets that needs build then \textit{N} is given by the equation $N = \sqrt{targets}$.
+		\item
+		\textit{Build threads} would be running until the whole build process is finished. \texttt{main} program will send a kill message to \textit{build threads} to terminate when the build is done.
+		\item
+		As soon as a \textit{build thread} is done with the build command execution for a target, it sends a completion message to \texttt{main} using \textit{response queue}.
+		\item
+		{Build threads} poll on \textit{dispatch queue} looking for targets to build. \texttt{main} program dispatches targets to build threads via \textit{dispatch queue}. \textit{Dispatch queue} is explained in detail in the queues section.
+		\end{itemize}
+		
+		\subsubsection{Monitor Thread}
+		\begin{itemize}
+		\item
+		\textit{Monitor thread} is a single thread. It is created when build threads are created and terminated when the build process is finished. The main function of \textit{monitor thread} is to monitor the targets that appear as a dependency for multiple targets.
+		\item
+		As soon as a target is built by a \textit{build thread} the corresponding	target that is being monitored is sent to \texttt{main} via \textit{response queue}
+		\end{itemize}
+	
+		\subsubsection{\texttt{main}}
+		\begin{itemize}
+		\item
+		\texttt{main} handles responses from \textit{build threads} and \textit{monitor thread} via \textit{response queue}. For each message in \textit{response queue} \texttt{main } updates appropriate build completion flags for each target and dependency. As soon as \texttt{main} figures out that all dependencies for a target are built, the target is scheduled for build by being placed in \textit{dispatch queue}.  
+		\end{itemize}
+		
+		\subsection{Queues for inter-thread communication}
+		\remodel uses queues for message passing across multiple threads to communicate among each other. For \remodel queues are implemented from scratch using double-link lists. \remodel uses 3 queues viz. 1. \textit{dispatch queue} 2.\textit{monitor queue} 3.\textit{response queue}. Each queue is described in detail below.
+		\subsubsection{Dispatch Queue}
+		\begin{itemize}
+		\item
+		\textit{Dispatch queue} holds the targets that are ready for build. \textit{Build threads} pick up a targets from \textit{dispatch queue }and execute the build command.
+		
+		\item
+		\texttt{main} fills up the queue, \textit{build threads} and \textit{monitor thread} drain the queue.
+		\end{itemize}
+		
+		\subsubsection{Monitor Queue}
+		\begin{itemize}
+		\item
+		\textit{Monitor queue} is used by \textit{monitor thread} as a place holder for monitoring targets that are dependencies for multiple targets. \textit{Monitor thread} is the only producer and consumer of the queue.
+		\end{itemize}
+		
+		\subsubsection{Response Queue}
+		\begin{itemize}
+		\item
+		\textit{Response queue} is a place holder for responses from \textit{build threads} and \textit{monitor queue}. \texttt{main} handles each response from the \textit{response queue}. \textit{build} and \textit{monitor} threads fill up the queue and \texttt{main} removes elements from the queue.
+		\end{itemize}
+		
+\section{Usage}
+	\subsection{Writing Remodelfile}
+	\begin{enumerate}
+	\item
+	All target definitions should be place in a file with the name \texttt{Remodelfile} or \texttt{remodelfile} and it should be placed in the root directory of the project that is being built.
+	\item
+	Target definitions should written according the grammar given in the introduction section and they can appear in any order with in the file. 
+	\item
+	Each target definition should be written in a single line.
+	\item
+	One of the targets should be defined as \texttt{DEFAULT}. \remodel uses \texttt{DEFAULT} as the default target when none specified in the command.
+	\item
+	\remodel parses \texttt{Remodelfile} and checks for any cyclic dependencies before proceeding with the build.
+	\end{enumerate}
+	
+	\subsection{CLI}
+	\remodel shoudl be run from within the project directory which has the \texttt{remodelfile} or \texttt{Remodelfile}. 
+	\remodel command takes \texttt{target name} as an argument. If no arguments are specified it used \texttt{DEFAUTLT} as the argument.
+	\\
+	To show help of the command use \texttt{-h} or \texttt{--help}. For example:\\
+	\shellcmd{[vijaykp@linux test\_project]\$ ../remodel --help}
+	\shellcmd{remodel: Usage: remodel [<target\_name> | --help | -h]}
+	\shellcmd{\ \ \ \ \ \ \ \ \ \ Description: <target\_name> is optional.} 
+	\shellcmd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Default value 'DEFAULT'}
+	\shellcmd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is used when none specified.}                     
+	\shellcmd{\ \ \ \ \ \ \ \ \ \ Options: '-h' and '--help' will print this message}
+\section{Build and test \remodel}
+	\begin{enumerate}
+	\item
+	Change directory to \remodel directory.
+	\item
+	Before building \remodel make sure that \texttt{libssl-dev} and \texttt{gcc} are installed.
+	\item
+	Run \texttt{make} for building \remodel for testing. \\Alternatively, use \texttt{make debug} command to build a debug build. Debug build is useful while debugging. It builds the project with gdb flags and enables debug log messages. Make sure to run \texttt{make clean} before switching from \texttt{debug} to \texttt{prod} build and vice versa.
+	\item
+	Build generates the binary \remodel. 
+	\item
+	Change to any test directory and run \remodel either by copying \remodel binary to test directory or providing the full path to \remodel.
+	\end{enumerate}
+\subsection{Testcases}
+	Test cases are provided in \texttt{testcases/} directory. Shell scripts in \texttt{testscripts/} can be used for testing test cases in \texttt{testcases/} directory.
+\end{document}          
