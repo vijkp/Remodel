@@ -2,7 +2,6 @@
 \usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
 \usepackage{changepage}
 
-
 % Title Page
 \title{Remodel\\
 (Systems Course Project)\\
@@ -19,6 +18,7 @@ University of Massachusetts Amherst
 \begin{document}
 \newcommand{\remodel}{\texttt{remodel }}
 \newcommand{\shellcmd}[1]{\\\indent\indent\texttt{#1}}
+\newcommand{\shellcmds}[1]{\\\indent\texttt{#1}}
 \maketitle
 \tableofcontents
 \newpage
@@ -148,8 +148,17 @@ University of Massachusetts Amherst
 		\textit{Response queue} is a place holder for responses from \textit{build threads} and \textit{monitor queue}. \texttt{main} handles each response from the \textit{response queue}. \textit{build} and \textit{monitor} threads fill up the queue and \texttt{main} removes elements from the queue.
 		\end{itemize}
 		
+		\subsection{Cyclic Dependency Check}
+		\remodel checks for cyclic dependencies, if any, while creating target dependency tree. For example, one of the test cases in \texttt{testcases} folder.\\
+		\shellcmds{[vijaykp@linux ~/Remodel/testcases/cyclic\_dependency]\$ ../../remodel}
+		\shellcmds{remodel: building the default target 'DEFAULT'}
+		\shellcmds{remodel: error: cyclic dependency detected for target/file 'snap'}
+		\shellcmds{remodel: info: detected cyclic dependency: DEFAULT -> all -> snap -> sched.o -> snap}
+		\shellcmds{remodel: cleaning up}
+		\shellcmds{remodel: remodel took 2 milliseconds to complete}
+		
 \section{Usage}
-	\subsection{Writing Remodelfile}
+	\subsection{Remodelfile format}
 	\begin{enumerate}
 	\item
 	All target definitions should be place in a file with the name \texttt{Remodelfile} or \texttt{remodelfile} and it should be placed in the root directory of the project that is being built.
@@ -174,6 +183,8 @@ University of Massachusetts Amherst
 	\shellcmd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Default value 'DEFAULT'}
 	\shellcmd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is used when none specified.}                     
 	\shellcmd{\ \ \ \ \ \ \ \ \ \ Options: '-h' and '--help' will print this message}
+
+
 \section{Build and test \remodel}
 	\begin{enumerate}
 	\item
@@ -189,4 +200,13 @@ University of Massachusetts Amherst
 	\end{enumerate}
 \subsection{Testcases}
 	Test cases are provided in \texttt{testcases/} directory. Shell scripts in \texttt{testscripts/} can be used for testing test cases in \texttt{testcases/} directory.
+\section{Source code}
+	\begin{itemize}
+	\item
+	Total lines of code: \texttt{2072}
+	\item
+	Total number of files: \texttt{14}
+	\item
+	Language: \texttt{C}
+	\end{itemize}
 \end{document}          
