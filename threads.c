@@ -36,10 +36,6 @@ error_t spawn_threads(int number) {
     pthread_create(&thread_list[number].ptp, NULL,
                 (void *)&monitor_thread, (void *)&thread_list[number]);
 
-    /* May not need this portion */
-    //for (i=0; i < number; i++ ){
-    //  pthread_join(thread_list[i].ptp, NULL);
-    //}
 end:
     return ret;
 }
